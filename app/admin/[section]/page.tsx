@@ -17,8 +17,13 @@ const sectionConfig = {
   },
   mass: {
     title: "Mass Scheduling",
-    description: "Manage Mass times, confessions, and liturgy schedule items.",
+    description: "Manage weekly church times, confessions, and liturgy schedule items.",
     editorSection: "mass"
+  },
+  associations: {
+    title: "Associations",
+    description: "Manage CYON, CMO, CWO, altar servers, and other associations.",
+    editorSection: "associations"
   },
   announcements: {
     title: "Announcements",
@@ -32,6 +37,16 @@ const sectionConfig = {
   documents: {
     title: "Documents",
     description: "Manage bulletins and special event files from one library."
+  },
+  saints: {
+    title: "Saints",
+    description: "Manage saint stories and the Saint of the Day section.",
+    editorSection: "saints"
+  },
+  prayers: {
+    title: "Prayers",
+    description: "Manage prayer write-ups that parish members can read on the website.",
+    editorSection: "prayers"
   },
   reflections: {
     title: "Reflections",

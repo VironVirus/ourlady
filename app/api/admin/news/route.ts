@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
+import { normalizeNewsCategory } from "@/lib/news-categories";
 import { saveNewsPost } from "@/lib/news";
 
 function asString(value: unknown) {
@@ -25,7 +26,7 @@ export async function POST(request: Request) {
     const saved = await saveNewsPost({
       id: asString(body.id),
       slug: asString(body.slug),
-      label: asString(body.label),
+      label: normalizeNewsCategory(asString(body.label)),
       title: asString(body.title),
       description: asString(body.excerpt),
       excerpt: asString(body.excerpt),

@@ -17,19 +17,26 @@ export default async function AnnouncementsPage() {
       />
       <section className="section">
         <div className="container story-grid">
-          {content.announcements.map((item) => (
-            <article key={item.id} className="story-card">
-              <span className="section-badge">
-                <CrossIcon className="icon" />
-                {item.tag}
-              </span>
-              <h2>{item.title}</h2>
-              <p>{item.detail}</p>
-              <div className="story-card__meta">
-                <span>{item.date}</span>
-              </div>
-            </article>
-          ))}
+          {content.announcements.length > 0 ? (
+            content.announcements.map((item) => (
+              <article key={item.id} className="story-card">
+                <span className="section-badge">
+                  <CrossIcon className="icon" />
+                  {item.tag}
+                </span>
+                <h2>{item.title}</h2>
+                <p>{item.detail}</p>
+                <div className="story-card__meta">
+                  <span>{item.date}</span>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="panel empty-state">
+              <h2>No announcements yet.</h2>
+              <p>Announcements can be published from the admin area when needed.</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

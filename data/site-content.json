@@ -2,6 +2,16 @@
   "homeIntro": "Faith, Worship, Community",
   "welcomeMessage": "Welcome to Our Lady of Lourdes Catholic Church, Maryland, Enugu.",
   "mission": "A Catholic parish family rooted in prayer and service.",
+  "churchTimesNote": "Mass times can be updated weekly by the parish office. Please check again before Sunday for any feast-day or special celebration changes.",
+  "themePreset": "gold",
+  "theme": {
+    "primary": "#9a7431",
+    "secondary": "#4a3219",
+    "accent": "#d9b86d",
+    "background": "#f5efe5",
+    "backgroundSoft": "#ece1cf"
+  },
+  "themeSchedule": [],
   "parishHistory": {
     "heading": "Our Story",
     "summary": "A growing parish family in Maryland, Enugu.",
@@ -51,18 +61,7 @@
       "detail": "Main Church"
     }
   ],
-  "priests": [
-    {
-      "id": "priest-1",
-      "name": "Parish Priest",
-      "title": "Pastoral Care",
-      "motto": "Welcome to Our Lady of Lourdes.",
-      "bio": [
-        "Serving the parish in prayer, sacraments, and pastoral care."
-      ],
-      "image": ""
-    }
-  ],
+  "priests": [],
   "contact": {
     "address": "Our Lady of Lourdes Catholic Church",
     "town": "Maryland, Enugu",
@@ -76,173 +75,70 @@
     ],
     "mapNote": ""
   },
-  "gallery": [
+  "gallery": [],
+  "pastoralUnits": [],
+  "associations": [
     {
-      "id": "church-front",
-      "title": "Church Front",
-      "period": "Exterior",
-      "detail": "Our parish front view.",
-      "tone": "gold"
-    },
-    {
-      "id": "parish-priest",
-      "title": "Parish Priest",
-      "period": "Clergy",
-      "detail": "Pastoral care and leadership.",
-      "tone": "stone"
-    },
-    {
-      "id": "procession-street",
-      "title": "Parish Procession",
-      "period": "Parish Life",
-      "detail": "Worship in community.",
-      "tone": "olive"
-    },
-    {
-      "id": "courtyard",
-      "title": "Courtyard Gathering",
-      "period": "Community",
-      "detail": "Parish moments together.",
-      "tone": "rose"
-    },
-    {
-      "id": "sanctuary",
-      "title": "Sanctuary",
-      "period": "Liturgy",
-      "detail": "Prayer at the altar.",
-      "tone": "gold"
-    }
-  ],
-  "pastoralUnits": [
-    {
-      "slug": "men",
-      "shortName": "Men",
-      "name": "Men's Group",
-      "description": "Meetings, service, and notices.",
-      "lead": "Men's Leadership",
+      "slug": "cyon",
+      "shortName": "CYON",
+      "name": "Catholic Youth Organisation of Nigeria",
+      "description": "Faith formation, outreach, sports, and youth fellowship in the parish.",
+      "lead": "CYON Executives",
+      "meeting": "After Sunday Mass",
       "focus": [
-        "Meetings",
-        "Service",
-        "Notices"
-      ]
+        "Formation",
+        "Sports",
+        "Community outreach"
+      ],
+      "image": "/images/church/procession-street.jpeg"
     },
     {
-      "slug": "women",
-      "shortName": "Women",
-      "name": "Women's Group",
-      "description": "Prayer, welfare, and events.",
-      "lead": "Women's Leadership",
+      "slug": "cmo",
+      "shortName": "CMO",
+      "name": "Catholic Men Organisation",
+      "description": "Men of the parish growing in faith, responsibility, and service.",
+      "lead": "CMO Leadership",
+      "meeting": "Second Sunday of the month",
+      "focus": [
+        "Service",
+        "Leadership",
+        "Family life"
+      ],
+      "image": "/images/church/front-exterior.jpeg"
+    },
+    {
+      "slug": "cwo",
+      "shortName": "CWO",
+      "name": "Catholic Women Organisation",
+      "description": "Prayer, welfare, support, and spiritual growth for women of the parish.",
+      "lead": "CWO Leadership",
+      "meeting": "First Sunday of the month",
       "focus": [
         "Prayer",
         "Welfare",
-        "Events"
-      ]
+        "Celebrations"
+      ],
+      "image": "/images/church/procession-courtyard.jpeg"
     },
     {
-      "slug": "youth",
-      "shortName": "Youth",
-      "name": "Youth Group",
-      "description": "Formation, media, and activities.",
-      "lead": "Youth Leadership",
+      "slug": "altar-servers",
+      "shortName": "Servers",
+      "name": "Altar Servers",
+      "description": "Young parish servants assisting at the altar with reverence and discipline.",
+      "lead": "Servers Coordinator",
+      "meeting": "Saturday practice",
       "focus": [
-        "Formation",
-        "Media",
-        "Activities"
-      ]
+        "Liturgy",
+        "Discipline",
+        "Service"
+      ],
+      "image": "/images/church/altar-interior.jpeg"
     }
   ],
-  "reflections": [
-    {
-      "id": "marian-devotion",
-      "category": "Faith",
-      "title": "Marian Devotion",
-      "excerpt": "Prayer and trust in Our Lady.",
-      "date": "Parish Reflection",
-      "author": "Our Lady of Lourdes"
-    },
-    {
-      "id": "life-at-the-altar",
-      "category": "Liturgy",
-      "title": "Life at the Altar",
-      "excerpt": "Worship, prayer, and service.",
-      "date": "Parish Reflection",
-      "author": "Our Lady of Lourdes"
-    },
-    {
-      "id": "parish-family",
-      "category": "Community",
-      "title": "Parish Family",
-      "excerpt": "Growing together in faith.",
-      "date": "Parish Reflection",
-      "author": "Our Lady of Lourdes"
-    }
-  ],
-  "newsItems": [
-    {
-      "id": "parish-renewal",
-      "slug": "cyon-youth-week-sports",
-      "label": "Sports News",
-      "title": "CYON YOUTH WEEK SPORTS",
-      "description": "CYON youth week sports officially commences",
-      "excerpt": "CYON youth week sports officially commences with parish excitement and strong youth participation.",
-      "content": "CYON youth week sports officially commences at Our Lady of Lourdes Catholic Church, Maryland, Enugu.\n\nThe parish youth community has come together with energy, friendship, and faith-filled joy for this year's activities. Families and parish groups are encouraged to support the young people throughout the week.",
-      "date": "29th June, 2027",
-      "location": "Main Church",
-      "image": "",
-      "published": true,
-      "likes": 1
-    },
-    {
-      "id": "community-outreach",
-      "slug": "community-outreach",
-      "label": "News",
-      "title": "Community Outreach",
-      "description": "Parish outreach and service in the community.",
-      "excerpt": "Parish outreach and service continue to bring faith and support into the community.",
-      "content": "Parish outreach and service continue to bring faith and support into the community.\n\nMembers of the parish joined together in a spirit of charity, prayer, and practical help, showing the church's presence beyond the sanctuary.",
-      "date": "This Month",
-      "location": "Maryland, Enugu",
-      "image": "",
-      "published": true,
-      "likes": 0
-    },
-    {
-      "id": "choir-gathering",
-      "slug": "choir-and-liturgy-gathering",
-      "label": "News",
-      "title": "Choir and Liturgy Gathering",
-      "description": "Music and worship preparation.",
-      "excerpt": "Choir members and liturgy teams continue their preparation for beautiful worship.",
-      "content": "Choir members and liturgy teams continue their preparation for beautiful worship.\n\nThe gathering focused on music, reverence, and coordinated service for upcoming parish celebrations.",
-      "date": "Weekly",
-      "location": "Main Church",
-      "image": "",
-      "published": true,
-      "likes": 0
-    }
-  ],
+  "saints": [],
+  "prayers": [],
+  "reflections": [],
+  "newsItems": [],
   "documents": [],
-  "announcements": [
-    {
-      "id": "sunday-worship",
-      "title": "Sunday Worship",
-      "detail": "6:30 AM and 9:00 AM",
-      "date": "Every Sunday",
-      "tag": "Mass"
-    },
-    {
-      "id": "weekday-mass",
-      "title": "Weekday Mass",
-      "detail": "6:00 AM",
-      "date": "Monday to Friday",
-      "tag": "Mass"
-    },
-    {
-      "id": "friday-adoration",
-      "title": "Friday Adoration",
-      "detail": "5:00 PM",
-      "date": "Every Friday",
-      "tag": "Prayer"
-    }
-  ]
+  "announcements": []
 }

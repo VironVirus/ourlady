@@ -4,50 +4,19 @@ import {
   ClockIcon,
   CrossIcon,
   DocumentIcon,
-  GalleryIcon,
-  MapPinIcon,
-  SparkIcon
+  SparkIcon,
+  UsersIcon
 } from "@/components/site-icons";
 import { getSiteContent } from "@/lib/content";
 import { getPublishedDocuments } from "@/lib/documents";
 import { getPublishedNewsPosts } from "@/lib/news";
+import { getActiveSaint } from "@/lib/site-runtime";
 import {
   churchPhotos,
   gallerySlides,
   heroSlides,
   photoBackground
 } from "@/lib/site-media";
-
-const quickLinks = [
-  {
-    href: "/mass-schedule",
-    label: "Mass Times",
-    meta: "Sunday and weekday worship",
-    icon: ClockIcon,
-    photo: churchPhotos.altarInterior
-  },
-  {
-    href: "/news",
-    label: "News",
-    meta: "Parish stories and updates",
-    icon: SparkIcon,
-    photo: churchPhotos.processionStreet
-  },
-  {
-    href: "/announcements",
-    label: "Announcements",
-    meta: "Important notices",
-    icon: CrossIcon,
-    photo: churchPhotos.frontExterior
-  },
-  {
-    href: "/gallery",
-    label: "Gallery",
-    meta: "Church life in pictures",
-    icon: GalleryIcon,
-    photo: churchPhotos.processionCourtyard
-  }
-];
 
 export default async function HomePage() {
   const [content, newsItems, documents] = await Promise.all([
@@ -56,6 +25,37 @@ export default async function HomePage() {
     getPublishedDocuments()
   ]);
   const featuredPriest = content.priests[0];
+  const featuredSaint = getActiveSaint(content);
+  const quickLinks = [
+    {
+      href: "/mass-schedule",
+      label: "Mass Times",
+      meta: "Sunday and weekday worship",
+      icon: ClockIcon,
+      photo: churchPhotos.altarInterior
+    },
+    {
+      href: "/news",
+      label: "News",
+      meta: "Parish stories and updates",
+      icon: SparkIcon,
+      photo: churchPhotos.processionStreet
+    },
+    {
+      href: "/announcements",
+      label: "Announcements",
+      meta: "Important notices",
+      icon: CrossIcon,
+      photo: churchPhotos.frontExterior
+    },
+    {
+      href: "/associations",
+      label: "Associations",
+      meta: "CYON, CMO, CWO and more",
+      icon: UsersIcon,
+      photo: churchPhotos.processionCourtyard
+    }
+  ];
 
   return (
     <div className="page">
@@ -112,6 +112,7 @@ export default async function HomePage() {
             <div className="photo-card__content">
               <div className="eyebrow eyebrow--light">Join Us</div>
               <h2>Mass and Prayer</h2>
+              {content.churchTimesNote ? <p>{content.churchTimesNote}</p> : null}
               <div className="schedule-pill-row">
                 {content.massSchedule.slice(0, 4).map((item) => (
                   <div key={item.id} className="schedule-pill">
@@ -152,37 +153,44 @@ export default async function HomePage() {
           </Link>
         </div>
         <div className="container story-grid">
-          {newsItems.slice(0, 3).map((item, index) => (
-            <article
-              key={item.id}
-              className="story-card story-card--photo"
-              style={photoBackground(
-                item.image
-                  ? {
-                      src: item.image,
-                      alt: item.title || "Parish news image",
-                      position: "center"
-                    }
-                  : gallerySlides[(index + 1) % gallerySlides.length]
-              )}
-            >
-              <div className="story-card__content">
-                <span className="section-badge section-badge--light">
-                  <SparkIcon className="icon" />
-                  {item.label}
-                </span>
-                <h2>{item.title}</h2>
-                <p>{item.excerpt || item.description}</p>
-                <div className="story-card__meta story-card__meta--light">
-                  <span>{item.date}</span>
-                  <span>{item.location}</span>
+          {newsItems.length > 0 ? (
+            newsItems.slice(0, 3).map((item, index) => (
+              <article
+                key={item.id}
+                className="story-card story-card--photo"
+                style={photoBackground(
+                  item.image
+                    ? {
+                        src: item.image,
+                        alt: item.title || "Parish news image",
+                        position: "center"
+                      }
+                    : gallerySlides[(index + 1) % gallerySlides.length]
+                )}
+              >
+                <div className="story-card__content">
+                  <span className="section-badge section-badge--light">
+                    <SparkIcon className="icon" />
+                    {item.label}
+                  </span>
+                  <h2>{item.title}</h2>
+                  <p>{item.excerpt || item.description}</p>
+                  <div className="story-card__meta story-card__meta--light">
+                    <span>{item.date}</span>
+                    <span>{item.location}</span>
+                  </div>
+                  <Link href={`/news/${item.slug}`} className="text-link text-link--light">
+                    Read full story
+                  </Link>
                 </div>
-                <Link href={`/news/${item.slug}`} className="text-link text-link--light">
-                  Read full story
-                </Link>
-              </div>
-            </article>
-          ))}
+              </article>
+            ))
+          ) : (
+            <div className="panel empty-state">
+              <h2>No parish news yet.</h2>
+              <p>Real parish news can be added from the admin area when ready.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -193,24 +201,44 @@ export default async function HomePage() {
               <CrossIcon className="icon" />
               Announcements
             </div>
-            <div className="feed-stack">
-              {content.announcements.map((item) => (
-                <div key={item.id} className="feed-item">
-                  <span>{item.tag}</span>
-                  <strong>{item.title}</strong>
-                  <small>
-                    {item.date} · {item.detail}
-                  </small>
-                </div>
-              ))}
-            </div>
+            {content.announcements.length > 0 ? (
+              <div className="feed-stack">
+                {content.announcements.map((item) => (
+                  <div key={item.id} className="feed-item">
+                    <span>{item.tag}</span>
+                    <strong>{item.title}</strong>
+                    <small>
+                      {item.date} · {item.detail}
+                    </small>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No announcements have been published yet.</p>
+            )}
             <Link href="/announcements" className="text-link">
               Open announcements
             </Link>
           </article>
 
           <article className="panel panel--soft-stack">
-            {documents[0] ? (
+            {featuredSaint ? (
+              <>
+                <div className="section-badge">
+                  <CrossIcon className="icon" />
+                  Saint of the Day
+                </div>
+                <h2>{featuredSaint.name}</h2>
+                <p>{featuredSaint.excerpt}</p>
+                <div className="chip-row">
+                  <span className="chip">{featuredSaint.title}</span>
+                  <span className="chip">{featuredSaint.feastDay}</span>
+                </div>
+                <Link href={`/saints/${featuredSaint.slug}`} className="text-link">
+                  Read saint story
+                </Link>
+              </>
+            ) : documents[0] ? (
               <>
                 <div className="section-badge">
                   <DocumentIcon className="icon" />
@@ -229,54 +257,73 @@ export default async function HomePage() {
             ) : (
               <>
                 <div className="section-badge">
-                  <MapPinIcon className="icon" />
-                  Parish
+                  <CrossIcon className="icon" />
+                  Saint of the Day
                 </div>
-                <h2>{content.contact.address}</h2>
-                <p>{content.contact.town}</p>
-                <div className="chip-row">
-                  {content.pastoralUnits.map((item) => (
-                    <span key={item.slug} className="chip">
-                      {item.name}
-                    </span>
-                  ))}
-                </div>
-                <Link href="/pastoral" className="text-link">
-                  Pastoral organisation
-                </Link>
+                <h2>Saint stories coming soon</h2>
+                <p>Add saint stories from the admin area to feature them on the homepage.</p>
               </>
             )}
           </article>
         </div>
       </section>
 
+      <section className="section section--soft">
+        <div className="container section__heading">
+          <div>
+            <div className="eyebrow">Associations</div>
+            <h2>Find Your Association</h2>
+          </div>
+          <Link href="/associations" className="text-link">
+            View all associations
+          </Link>
+        </div>
+        <div className="container association-strip">
+          {content.associations.slice(0, 4).map((item) => (
+            <Link key={item.slug} href={`/associations/${item.slug}`} className="association-chip-card">
+              <span>{item.shortName}</span>
+              <strong>{item.name}</strong>
+              <small>{item.meeting || item.lead}</small>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section className="section">
         <div className="container section__heading">
           <div>
-            <div className="eyebrow">Gallery</div>
-            <h2>Parish Moments</h2>
+            <div className="eyebrow">Latest News</div>
+            <h2>More News Previews</h2>
           </div>
-          <Link href="/gallery" className="text-link">
-            Open gallery
+          <Link href="/news" className="text-link">
+            Open all news
           </Link>
         </div>
-        <div className="container photo-mosaic">
-          {gallerySlides.slice(0, 4).map((photo, index) => {
-            const item = content.gallery[index];
-
-            return (
-              <article
-                key={photo.src}
-                className={`mosaic-card${index === 0 ? " mosaic-card--large" : ""}`}
-                style={photoBackground(photo)}
-              >
-                <div className="mosaic-card__content">
-                  <span>{item?.period ?? "Parish"}</span>
-                  <h3>{item?.title ?? "Our Lady of Lourdes"}</h3>
+        <div className="container news-preview-grid">
+          {newsItems.length > 0 ? (
+            newsItems.slice(0, 4).map((item) => (
+              <article key={item.id} className="news-preview-card">
+                <span className="section-badge">
+                  <SparkIcon className="icon" />
+                  {item.label}
+                </span>
+                <h3>{item.title}</h3>
+                <p>{item.excerpt || item.description}</p>
+                <div className="story-card__meta">
+                  <span>{item.date}</span>
+                  <span>{item.location}</span>
                 </div>
+                <Link href={`/news/${item.slug}`} className="text-link">
+                  Read story
+                </Link>
               </article>
-            );
-          })}
+            ))
+          ) : (
+            <div className="panel empty-state">
+              <h2>No news previews yet.</h2>
+              <p>Published news will appear here once real stories are added.</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

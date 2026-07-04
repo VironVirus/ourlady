@@ -18,26 +18,33 @@ export default async function GalleryPage() {
 
       <section className="section">
         <div className="container gallery-grid">
-          {gallerySlides.map((photo, index) => {
-            const item = content.gallery[index];
+          {content.gallery.length > 0 ? (
+            content.gallery.map((item, index) => {
+              const photo = gallerySlides[index % gallerySlides.length];
 
-            return (
-              <article
-                key={photo.src}
-                className={`gallery-card gallery-card--photo gallery-card--${item?.tone ?? "gold"}`}
-                style={photoBackground(photo)}
-              >
-                <div className="gallery-card__content">
-                  <span className="section-badge section-badge--light">
-                    <GalleryIcon className="icon" />
-                    {item?.period ?? "Parish"}
-                  </span>
-                  <h2>{item?.title ?? "Our Lady of Lourdes"}</h2>
-                  <p>{item?.detail ?? ""}</p>
-                </div>
-              </article>
-            );
-          })}
+              return (
+                <article
+                  key={item.id}
+                  className={`gallery-card gallery-card--photo gallery-card--${item.tone}`}
+                  style={photoBackground(photo)}
+                >
+                  <div className="gallery-card__content">
+                    <span className="section-badge section-badge--light">
+                      <GalleryIcon className="icon" />
+                      {item.period}
+                    </span>
+                    <h2>{item.title}</h2>
+                    <p>{item.detail}</p>
+                  </div>
+                </article>
+              );
+            })
+          ) : (
+            <div className="panel empty-state">
+              <h2>No gallery items yet.</h2>
+              <p>Real gallery captions and highlights can be added later.</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

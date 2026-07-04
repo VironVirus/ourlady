@@ -11,7 +11,7 @@ export default async function MassSchedulePage() {
       <PageIntro
         eyebrow="Mass"
         title="Mass Schedule"
-        description="Worship with us."
+        description={content.churchTimesNote || "Worship with us."}
         image={churchPhotos.altarInterior.src}
         position={churchPhotos.altarInterior.position}
       />

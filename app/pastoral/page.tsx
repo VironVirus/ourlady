@@ -17,29 +17,36 @@ export default async function PastoralPage() {
       />
       <section className="section">
         <div className="container dashboard-grid">
-          {content.pastoralUnits.map((unit, index) => (
-            <article
-              key={unit.slug}
-              className={`dashboard-card${index === 0 ? " dashboard-card--photo" : ""}`}
-              style={
-                index === 0 ? photoBackground(churchPhotos.processionCourtyard) : undefined
-              }
-            >
-              <div className={index === 0 ? "dashboard-card__overlay" : undefined}>
-                <span className={index === 0 ? "section-badge section-badge--light" : "section-badge"}>
-                  <PriestIcon className="icon" />
-                  {unit.shortName}
-                </span>
-                <h2>{unit.name}</h2>
-                <p>{unit.description}</p>
-                <ul>
-                  {unit.focus.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          ))}
+          {content.pastoralUnits.length > 0 ? (
+            content.pastoralUnits.map((unit, index) => (
+              <article
+                key={unit.slug}
+                className={`dashboard-card${index === 0 ? " dashboard-card--photo" : ""}`}
+                style={
+                  index === 0 ? photoBackground(churchPhotos.processionCourtyard) : undefined
+                }
+              >
+                <div className={index === 0 ? "dashboard-card__overlay" : undefined}>
+                  <span className={index === 0 ? "section-badge section-badge--light" : "section-badge"}>
+                    <PriestIcon className="icon" />
+                    {unit.shortName}
+                  </span>
+                  <h2>{unit.name}</h2>
+                  <p>{unit.description}</p>
+                  <ul>
+                    {unit.focus.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            ))
+          ) : (
+            <div className="panel empty-state">
+              <h2>No pastoral items yet.</h2>
+              <p>Pastoral information can be added later from the admin area.</p>
+            </div>
+          )}
         </div>
       </section>
     </div>

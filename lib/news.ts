@@ -9,6 +9,7 @@ import {
   getSupabaseAdmin,
   newsPostsTable
 } from "@/lib/supabase-admin";
+import { normalizeNewsCategory } from "@/lib/news-categories";
 import { slugify } from "@/lib/slug";
 
 type NewsRecord = {
@@ -55,7 +56,7 @@ function normalizeNewsPost(
   return {
     id: asString(input.id) || fallbackId,
     slug: slugify(asString(input.slug) || title || fallbackId, fallbackId),
-    label: asString(input.label) || "News",
+    label: normalizeNewsCategory(asString(input.label) || "General"),
     title,
     description: asString(input.description) || excerpt,
     excerpt,
@@ -95,7 +96,7 @@ function toSupabaseRecord(post: NewsPost) {
   return {
     id: post.id || randomUUID(),
     slug: slugify(post.slug || post.title || post.id, post.id || "news"),
-    label: post.label,
+    label: normalizeNewsCategory(post.label),
     title: post.title,
     excerpt: post.excerpt || post.description,
     content: post.content || post.excerpt || post.description,

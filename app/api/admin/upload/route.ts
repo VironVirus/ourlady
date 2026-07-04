@@ -44,9 +44,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Only image uploads are allowed." }, { status: 400 });
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 2 * 1024 * 1024) {
       return NextResponse.json(
-        { error: "Use an image smaller than 5MB." },
+        { error: "Use an image smaller than 2MB." },
         { status: 400 }
       );
     }

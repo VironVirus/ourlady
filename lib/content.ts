@@ -10,7 +10,13 @@ import {
   isNetlifyProduction,
   remoteStorageRequiredMessage
 } from "@/lib/deployment";
+import { normalizeNewsCategory } from "@/lib/news-categories";
 import { slugify } from "@/lib/slug";
+import {
+  getThemePresetPalette,
+  isThemePresetKey,
+  type ThemePresetKey
+} from "@/lib/theme-presets";
 
 export type MassScheduleItem = {
   id: string;
@@ -80,6 +86,56 @@ export type NewsItem = {
   likes: number;
 };
 
+export type ThemeSettings = {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  backgroundSoft: string;
+};
+
+export type ThemeScheduleItem = {
+  id: string;
+  label: string;
+  preset: ThemePresetKey;
+  startDate: string;
+  endDate: string;
+  enabled: boolean;
+};
+
+export type AssociationItem = {
+  slug: string;
+  shortName: string;
+  name: string;
+  description: string;
+  lead: string;
+  meeting: string;
+  focus: string[];
+  image?: string;
+};
+
+export type SaintItem = {
+  id: string;
+  slug: string;
+  name: string;
+  title: string;
+  feastDay: string;
+  displayDate: string;
+  excerpt: string;
+  story: string;
+  image?: string;
+  published: boolean;
+};
+
+export type PrayerItem = {
+  id: string;
+  title: string;
+  category: string;
+  excerpt: string;
+  body: string;
+  published: boolean;
+};
+
 export type AnnouncementItem = {
   id: string;
   title: string;
@@ -111,12 +167,19 @@ export type SiteContent = {
   homeIntro: string;
   welcomeMessage: string;
   mission: string;
+  churchTimesNote: string;
+  themePreset: ThemePresetKey;
+  theme: ThemeSettings;
+  themeSchedule: ThemeScheduleItem[];
   parishHistory: ParishHistory;
   massSchedule: MassScheduleItem[];
   priests: PriestProfile[];
   contact: ContactDetails;
   gallery: GalleryItem[];
   pastoralUnits: PastoralUnit[];
+  associations: AssociationItem[];
+  saints: SaintItem[];
+  prayers: PrayerItem[];
   reflections: ReflectionItem[];
   newsItems: NewsItem[];
   documents: DocumentItem[];
@@ -129,6 +192,10 @@ const defaultContent: SiteContent = {
   homeIntro: "",
   welcomeMessage: "",
   mission: "",
+  churchTimesNote: "",
+  themePreset: "gold",
+  theme: getThemePresetPalette("gold"),
+  themeSchedule: [],
   parishHistory: {
     heading: "",
     summary: "",
@@ -148,6 +215,9 @@ const defaultContent: SiteContent = {
   },
   gallery: [],
   pastoralUnits: [],
+  associations: [],
+  saints: [],
+  prayers: [],
   reflections: [],
   newsItems: [],
   documents: [],
@@ -170,6 +240,16 @@ function asBoolean(value: unknown, fallback = false) {
 
 function asNumber(value: unknown, fallback = 0) {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function sanitizeColor(value: unknown, fallback: string) {
+  const color = asString(value).trim();
+
+  return /^#[0-9a-fA-F]{6}$/.test(color) ? color : fallback;
 }
 
 function withId(prefix: string, value: string, index: number) {
@@ -313,7 +393,7 @@ function sanitizeNewsItems(value: unknown): NewsItem[] {
     return {
       id: asString(entry.id) || withId("news", title, index),
       slug: asString(entry.slug) || slugify(title || asString(entry.id), `news-${index + 1}`),
-      label: asString(entry.label),
+      label: normalizeNewsCategory(asString(entry.label) || "General"),
       title,
       description: asString(entry.description) || excerpt,
       excerpt,
@@ -323,6 +403,110 @@ function sanitizeNewsItems(value: unknown): NewsItem[] {
       image: asString(entry.image),
       published: asBoolean(entry.published, true),
       likes: asNumber(entry.likes)
+    };
+  });
+}
+
+function sanitizeThemeSettings(value: unknown): ThemeSettings {
+  const entry = (value ?? {}) as Partial<ThemeSettings>;
+
+  return {
+    primary: sanitizeColor(entry.primary, defaultContent.theme.primary),
+    secondary: sanitizeColor(entry.secondary, defaultContent.theme.secondary),
+    accent: sanitizeColor(entry.accent, defaultContent.theme.accent),
+    background: sanitizeColor(entry.background, defaultContent.theme.background),
+    backgroundSoft: sanitizeColor(entry.backgroundSoft, defaultContent.theme.backgroundSoft)
+  };
+}
+
+function sanitizeThemePreset(value: unknown): ThemePresetKey {
+  const preset = asString(value);
+
+  return isThemePresetKey(preset) ? preset : defaultContent.themePreset;
+}
+
+function sanitizeThemeSchedule(value: unknown): ThemeScheduleItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item, index) => {
+    const entry = item as Partial<ThemeScheduleItem>;
+
+    return {
+      id: asString(entry.id) || withId("theme", `${asString(entry.preset)}-${asString(entry.startDate)}`, index),
+      label: asString(entry.label),
+      preset: sanitizeThemePreset(entry.preset),
+      startDate: asString(entry.startDate),
+      endDate: asString(entry.endDate),
+      enabled: asBoolean(entry.enabled, true)
+    };
+  });
+}
+
+function sanitizeAssociations(value: unknown): AssociationItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item, index) => {
+    const entry = item as Partial<AssociationItem>;
+    const name = asString(entry.name);
+
+    return {
+      slug:
+        asString(entry.slug) || slugify(name || asString(entry.shortName), `association-${index + 1}`),
+      shortName: asString(entry.shortName),
+      name,
+      description: asString(entry.description),
+      lead: asString(entry.lead),
+      meeting: asString(entry.meeting),
+      focus: asStringArray(entry.focus),
+      image: asString(entry.image)
+    };
+  });
+}
+
+function sanitizeSaints(value: unknown): SaintItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item, index) => {
+    const entry = item as Partial<SaintItem>;
+    const name = asString(entry.name);
+
+    return {
+      id: asString(entry.id) || withId("saint", name, index),
+      slug: asString(entry.slug) || slugify(name || asString(entry.id), `saint-${index + 1}`),
+      name,
+      title: asString(entry.title),
+      feastDay: asString(entry.feastDay),
+      displayDate: asString(entry.displayDate),
+      excerpt: asString(entry.excerpt),
+      story: asString(entry.story),
+      image: asString(entry.image),
+      published: asBoolean(entry.published, true)
+    };
+  });
+}
+
+function sanitizePrayers(value: unknown): PrayerItem[] {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.map((item, index) => {
+    const entry = item as Partial<PrayerItem>;
+    const title = asString(entry.title);
+
+    return {
+      id: asString(entry.id) || withId("prayer", title, index),
+      title,
+      category: asString(entry.category),
+      excerpt: asString(entry.excerpt),
+      body: asString(entry.body),
+      published: asBoolean(entry.published, true)
     };
   });
 }
@@ -387,6 +571,10 @@ function sanitizeSiteContent(value: unknown): SiteContent {
     homeIntro: asString(entry.homeIntro),
     welcomeMessage: asString(entry.welcomeMessage),
     mission: asString(entry.mission),
+    churchTimesNote: asString(entry.churchTimesNote),
+    themePreset: sanitizeThemePreset((entry as { themePreset?: unknown }).themePreset),
+    theme: sanitizeThemeSettings(entry.theme),
+    themeSchedule: sanitizeThemeSchedule((entry as { themeSchedule?: unknown }).themeSchedule),
     parishHistory: {
       heading: asString(entry.parishHistory?.heading),
       summary: asString(entry.parishHistory?.summary),
@@ -406,6 +594,9 @@ function sanitizeSiteContent(value: unknown): SiteContent {
     },
     gallery: sanitizeGallery(entry.gallery),
     pastoralUnits: sanitizePastoralUnits(entry.pastoralUnits ?? entry.dashboardGroups),
+    associations: sanitizeAssociations((entry as { associations?: unknown }).associations),
+    saints: sanitizeSaints((entry as { saints?: unknown }).saints),
+    prayers: sanitizePrayers((entry as { prayers?: unknown }).prayers),
     reflections: sanitizeReflections(entry.reflections ?? entry.blogPosts),
     newsItems: sanitizeNewsItems(entry.newsItems),
     documents: sanitizeDocuments(entry.documents),
@@ -413,7 +604,41 @@ function sanitizeSiteContent(value: unknown): SiteContent {
   };
 }
 
+function mergeContentSource(base: unknown, override: unknown): unknown {
+  if (Array.isArray(override)) {
+    return override;
+  }
+
+  if (isRecord(base) && isRecord(override)) {
+    const merged: Record<string, unknown> = { ...base };
+
+    Object.keys(override).forEach((key) => {
+      const nextValue = override[key];
+      const baseValue = base[key];
+
+      merged[key] =
+        isRecord(baseValue) && isRecord(nextValue)
+          ? mergeContentSource(baseValue, nextValue)
+          : nextValue;
+    });
+
+    return merged;
+  }
+
+  return override;
+}
+
+async function readLocalSiteContentSource() {
+  try {
+    const file = await fs.readFile(contentFilePath, "utf8");
+    return JSON.parse(file) as unknown;
+  } catch {
+    return defaultContent;
+  }
+}
+
 export async function readSiteContent() {
+  const localSource = await readLocalSiteContentSource();
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
@@ -425,21 +650,14 @@ export async function readSiteContent() {
         .maybeSingle();
 
       if (!error && data?.payload) {
-        return sanitizeSiteContent(data.payload);
+        return sanitizeSiteContent(mergeContentSource(localSource, data.payload));
       }
     } catch {
       // Fall back to the local JSON file when Supabase is unavailable.
     }
   }
 
-  try {
-    const file = await fs.readFile(contentFilePath, "utf8");
-    const parsed = JSON.parse(file) as unknown;
-
-    return sanitizeSiteContent(parsed);
-  } catch {
-    return defaultContent;
-  }
+  return sanitizeSiteContent(localSource);
 }
 
 export async function getSiteContent() {

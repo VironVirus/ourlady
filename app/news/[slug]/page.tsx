@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { NewsStoryActions } from "@/components/news-story-actions";
 import { PageIntro } from "@/components/page-intro";
 import { SparkIcon } from "@/components/site-icons";
-import { getNewsPostBySlug } from "@/lib/news";
+import { getNewsPostBySlug, getPublishedNewsPosts } from "@/lib/news";
 import { churchPhotos } from "@/lib/site-media";
 
 type NewsStoryPageProps = {
@@ -40,13 +40,19 @@ export async function generateMetadata({
 
 export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
   const { slug } = await params;
-  const item = await getNewsPostBySlug(slug);
+  const [item, newsItems] = await Promise.all([
+    getNewsPostBySlug(slug),
+    getPublishedNewsPosts()
+  ]);
 
   if (!item || !item.published) {
     notFound();
   }
 
   const paragraphs = toParagraphs(item.content || item.excerpt || item.description);
+  const relatedStories = newsItems
+    .filter((entry) => entry.slug !== item.slug && entry.label === item.label)
+    .slice(0, 3);
 
   return (
     <div className="page">
@@ -83,7 +89,7 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
             <div className="panel panel--soft-stack">
               <span className="section-badge">
                 <SparkIcon className="icon" />
-                Parish News
+                {item.label}
               </span>
               <h2>Read and share</h2>
               <p>This story has its own public link, so it can be opened and shared directly.</p>
@@ -91,6 +97,21 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
                 Back to all news
               </Link>
             </div>
+            {relatedStories.length > 0 ? (
+              <div className="panel panel--soft-stack">
+                <h2>Related stories</h2>
+                {relatedStories.map((story) => (
+                  <div key={story.id} className="feed-item">
+                    <span>{story.label}</span>
+                    <strong>{story.title}</strong>
+                    <small>{story.date}</small>
+                    <Link href={`/news/${story.slug}`} className="text-link">
+                      Open story
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </aside>
         </div>
       </section>

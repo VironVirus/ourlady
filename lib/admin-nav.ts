@@ -5,6 +5,9 @@ type AdminSectionHref =
   | "/admin/announcements"
   | "/admin/news"
   | "/admin/documents"
+  | "/admin/associations"
+  | "/admin/saints"
+  | "/admin/prayers"
   | "/admin/reflections"
   | "/admin/pastoral"
   | "/admin/priests"
@@ -52,6 +55,11 @@ export const adminSectionGroups: readonly AdminSectionGroup[] = [
         href: "/admin/pastoral",
         label: "Pastoral Organisation",
         meta: "Groups and units"
+      },
+      {
+        href: "/admin/associations",
+        label: "Associations",
+        meta: "CYON, CMO, CWO, servers"
       }
     ]
   },
@@ -73,6 +81,16 @@ export const adminSectionGroups: readonly AdminSectionGroup[] = [
         href: "/admin/documents",
         label: "Documents",
         meta: "Bulletins and events"
+      },
+      {
+        href: "/admin/saints",
+        label: "Saints",
+        meta: "Saint of the day"
+      },
+      {
+        href: "/admin/prayers",
+        label: "Prayers",
+        meta: "Prayer texts and write-ups"
       },
       {
         href: "/admin/reflections",

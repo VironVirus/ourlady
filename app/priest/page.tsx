@@ -18,32 +18,41 @@ export default async function PriestPage() {
       />
       <section className="section">
         <div className="container split-grid">
-          {leadPriest ? (
-            <article
-              className="photo-card photo-card--tall"
-              style={photoBackground(churchPhotos.priest)}
-            >
-              <div className="photo-card__content">
-                <div className="eyebrow eyebrow--light">{leadPriest.title}</div>
-                <h2>{leadPriest.name}</h2>
-                <p>{leadPriest.motto}</p>
-              </div>
-            </article>
-          ) : null}
+          {content.priests.length > 0 ? (
+            <>
+              {leadPriest ? (
+                <article
+                  className="photo-card photo-card--tall"
+                  style={photoBackground(churchPhotos.priest)}
+                >
+                  <div className="photo-card__content">
+                    <div className="eyebrow eyebrow--light">{leadPriest.title}</div>
+                    <h2>{leadPriest.name}</h2>
+                    <p>{leadPriest.motto}</p>
+                  </div>
+                </article>
+              ) : null}
 
-          <article className="panel panel--soft-stack">
-            <div className="section-badge">
-              <PriestIcon className="icon" />
-              Clergy
+              <article className="panel panel--soft-stack">
+                <div className="section-badge">
+                  <PriestIcon className="icon" />
+                  Clergy
+                </div>
+                {content.priests.map((priest) => (
+                  <div key={priest.id} className="feed-item">
+                    <span>{priest.title}</span>
+                    <strong>{priest.name}</strong>
+                    <small>{priest.motto}</small>
+                  </div>
+                ))}
+              </article>
+            </>
+          ) : (
+            <div className="panel empty-state">
+              <h2>No priest profiles yet.</h2>
+              <p>Priest information can be added later from the admin area.</p>
             </div>
-            {content.priests.map((priest) => (
-              <div key={priest.id} className="feed-item">
-                <span>{priest.title}</span>
-                <strong>{priest.name}</strong>
-                <small>{priest.motto}</small>
-              </div>
-            ))}
-          </article>
+          )}
         </div>
       </section>
 

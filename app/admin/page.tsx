@@ -28,9 +28,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
     "/admin/general": "Home, history, contact",
     "/admin/mass": `${content.massSchedule.length} schedule items`,
     "/admin/pastoral": `${content.pastoralUnits.length} parish groups`,
+    "/admin/associations": `${content.associations.length} associations`,
     "/admin/announcements": `${content.announcements.length} announcements`,
     "/admin/news": `${newsItems.length} stories`,
     "/admin/documents": `${documents.length} files`,
+    "/admin/saints": `${content.saints.length} saints`,
+    "/admin/prayers": `${content.prayers.length} prayers`,
     "/admin/reflections": `${content.reflections.length} reflections`,
     "/admin/priests": `${content.priests.length} priest profiles`,
     "/admin/gallery": `${content.gallery.length} gallery items`

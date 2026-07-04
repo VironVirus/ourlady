@@ -30,6 +30,16 @@ export function ClockIcon({ className }: IconProps) {
   );
 }
 
+export function HomeIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="M4.8 10.2 12 4.4l7.2 5.8" />
+      <path d="M6.8 9.6v9h10.4v-9" />
+      <path d="M10.1 18.6v-4.4h3.8v4.4" />
+    </IconFrame>
+  );
+}
+
 export function GalleryIcon({ className }: IconProps) {
   return (
     <IconFrame className={className}>
@@ -90,6 +100,15 @@ export function MenuIcon({ className }: IconProps) {
       <path d="M4.5 7.5h15" />
       <path d="M4.5 12h15" />
       <path d="M4.5 16.5h15" />
+    </IconFrame>
+  );
+}
+
+export function CloseIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="m6 6 12 12" />
+      <path d="M18 6 6 18" />
     </IconFrame>
   );
 }
