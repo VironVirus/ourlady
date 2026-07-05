@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AdminImageUpload } from "@/components/admin-image-upload";
 import { NewsSlideshow } from "@/components/news-slideshow";
-import { HeartIcon, PlusIcon, ShareIcon, SparkIcon } from "@/components/site-icons";
+import { HeartIcon, MessageIcon, PlusIcon, ShareIcon, SparkIcon } from "@/components/site-icons";
 import { collectNewsImages, getNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { newsCategoryOptions, normalizeNewsCategory } from "@/lib/news-categories";
 import type { NewsPost } from "@/lib/news";
@@ -27,6 +27,7 @@ function createDraft(): NewsPost {
     location: "",
     image: "",
     images: [],
+    comments: 0,
     published: true,
     likes: 0,
     createdAt: "",
@@ -436,6 +437,7 @@ export function AdminNewsManager({
                   className="story-card__media"
                   images={activeImages}
                   emptyLabel="No story image added"
+                  fit="contain"
                   overlay="linear-gradient(180deg, rgba(17, 12, 9, 0.18), rgba(17, 12, 9, 0.78))"
                 />
                 <div className="story-card__content">
@@ -461,6 +463,10 @@ export function AdminNewsManager({
                   <span>
                     <HeartIcon className="icon icon--tiny" />
                     {activeItem.likes}
+                  </span>
+                  <span>
+                    <MessageIcon className="icon icon--tiny" />
+                    {activeItem.comments}
                   </span>
                   <span>
                     <ShareIcon className="icon icon--tiny" />

@@ -95,6 +95,7 @@ export type NewsItem = {
   location: string;
   image?: string;
   images?: string[];
+  comments: number;
   published: boolean;
   likes: number;
 };
@@ -445,6 +446,7 @@ function sanitizeNewsItems(value: unknown): NewsItem[] {
       location: asString(entry.location),
       image: getPrimaryNewsImage({ image: entry.image, images }),
       images,
+      comments: asNumber((entry as { comments?: unknown }).comments),
       published: asBoolean(entry.published, true),
       likes: asNumber(entry.likes)
     };

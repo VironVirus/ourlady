@@ -85,6 +85,7 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
               <NewsSlideshow
                 className="story-article__gallery"
                 images={storyImages}
+                fit="contain"
                 overlay="linear-gradient(180deg, rgba(17, 12, 9, 0.06), rgba(17, 12, 9, 0.28))"
               />
             ) : null}

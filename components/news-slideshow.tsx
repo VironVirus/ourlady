@@ -10,6 +10,7 @@ type NewsSlideshowProps = {
   emptyLabel?: string;
   intervalMs?: number;
   position?: string;
+  fit?: "cover" | "contain";
 };
 
 export function NewsSlideshow({
@@ -18,7 +19,8 @@ export function NewsSlideshow({
   overlay = "linear-gradient(180deg, rgba(17, 12, 9, 0.08), rgba(17, 12, 9, 0.38))",
   emptyLabel,
   intervalMs = 4200,
-  position = "center"
+  position = "center",
+  fit = "cover"
 }: NewsSlideshowProps) {
   const slides = useMemo(
     () => images.map((item) => item.trim()).filter(Boolean),
@@ -44,7 +46,11 @@ export function NewsSlideshow({
   }, [intervalMs, slides.length]);
 
   return (
-    <div className={`news-slideshow${slides.length === 0 ? " is-empty" : ""}${className ? ` ${className}` : ""}`}>
+    <div
+      className={`news-slideshow news-slideshow--${fit}${slides.length === 0 ? " is-empty" : ""}${
+        className ? ` ${className}` : ""
+      }`}
+    >
       {slides.map((image, index) => (
         <div
           key={`${image}-${index}`}

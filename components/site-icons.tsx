@@ -94,6 +94,22 @@ export function ChevronDownIcon({ className }: IconProps) {
   );
 }
 
+export function ChevronLeftIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="m14.8 6.5-5.6 5.5 5.6 5.5" />
+    </IconFrame>
+  );
+}
+
+export function ChevronRightIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="m9.2 6.5 5.6 5.5-5.6 5.5" />
+    </IconFrame>
+  );
+}
+
 export function MenuIcon({ className }: IconProps) {
   return (
     <IconFrame className={className}>
@@ -161,6 +177,14 @@ export function ShareIcon({ className }: IconProps) {
       <circle cx="18" cy="18.5" r="2" />
       <path d="m7.8 11 8.4-4.3" />
       <path d="m7.8 13 8.4 4.3" />
+    </IconFrame>
+  );
+}
+
+export function MessageIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="M5.2 7.4A2.2 2.2 0 0 1 7.4 5.2h9.2a2.2 2.2 0 0 1 2.2 2.2v6.2a2.2 2.2 0 0 1-2.2 2.2H10l-3.8 3v-3H7.4a2.2 2.2 0 0 1-2.2-2.2V7.4Z" />
     </IconFrame>
   );
 }

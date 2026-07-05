@@ -11,11 +11,11 @@ export default async function NewsPage() {
       <PageIntro
         eyebrow="News"
         title="Parish News"
-        description="Stories and updates from the parish."
+        description="Stories, events, and pastoral updates from parish life."
         image={churchPhotos.processionStreet.src}
         position={churchPhotos.processionStreet.position}
       />
-      <section className="section">
+      <section className="section section--soft">
         <div className="container">
           <NewsBrowser items={newsItems} />
         </div>

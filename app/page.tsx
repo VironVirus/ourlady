@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HeroSlideshow } from "@/components/hero-slideshow";
-import { NewsSlideshow } from "@/components/news-slideshow";
+import { HomeNewsShowcase } from "@/components/home-news-showcase";
 import {
   ClockIcon,
   CrossIcon,
@@ -9,7 +9,6 @@ import {
 } from "@/components/site-icons";
 import { getSiteContent } from "@/lib/content";
 import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
-import { getNewsImages } from "@/lib/news-images";
 import { getPublishedNewsPosts } from "@/lib/news";
 import {
   getActiveSaint,
@@ -206,33 +205,9 @@ export default async function HomePage() {
             View all news
           </Link>
         </div>
-        <div className="container story-grid">
+        <div className="container home-news-grid">
           {newsItems.length > 0 ? (
-            newsItems.slice(0, 3).map((item) => (
-              <article key={item.id} className="story-card story-card--photo">
-                <NewsSlideshow
-                  className="story-card__media"
-                  images={getNewsImages(item)}
-                  emptyLabel="No story image"
-                  overlay="linear-gradient(180deg, rgba(26, 17, 10, 0.18), rgba(26, 17, 10, 0.76))"
-                />
-                <div className="story-card__content">
-                  <span className="section-badge section-badge--light">
-                    <SparkIcon className="icon" />
-                    {item.label}
-                  </span>
-                  <h2>{item.title}</h2>
-                  <p>{item.excerpt || item.description}</p>
-                  <div className="story-card__meta story-card__meta--light">
-                    <span>{item.date}</span>
-                    <span>{item.location}</span>
-                  </div>
-                  <Link href={`/news/${item.slug}`} className="text-link text-link--light">
-                    Read full story
-                  </Link>
-                </div>
-              </article>
-            ))
+            <HomeNewsShowcase items={newsItems.slice(0, 5)} />
           ) : (
             <div className="panel empty-state">
               <h2>No news yet.</h2>

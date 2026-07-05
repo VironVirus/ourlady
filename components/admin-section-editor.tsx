@@ -129,6 +129,7 @@ function createNewsDraft(): NewsItem {
     date: "",
     location: "",
     image: "",
+    comments: 0,
     published: true,
     likes: 0
   };
