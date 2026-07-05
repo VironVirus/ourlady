@@ -2,7 +2,7 @@
   "homeIntro": "Faith, Worship, Community",
   "welcomeMessage": "Welcome to Our Lady of Lourdes Catholic Church, Maryland, Enugu.",
   "mission": "A Catholic parish family rooted in prayer and service.",
-  "churchTimesNote": "Mass times can be updated weekly by the parish office. Please check again before Sunday for any feast-day or special celebration changes.",
+  "churchTimesNote": "Please check again during the week for feast-day and special celebration changes.",
   "themePreset": "gold",
   "theme": {
     "primary": "#9a7431",
@@ -26,39 +26,124 @@
   },
   "massSchedule": [
     {
-      "id": "sun-early",
-      "title": "Sunday Mass",
-      "day": "Sunday",
-      "time": "6:30 AM",
-      "detail": "Main Church"
-    },
-    {
-      "id": "sun-late",
-      "title": "Sunday Mass",
-      "day": "Sunday",
-      "time": "9:00 AM",
-      "detail": "Main Church"
-    },
-    {
-      "id": "weekday",
-      "title": "Weekday Mass",
-      "day": "Monday to Friday",
-      "time": "6:00 AM",
-      "detail": "Main Church"
-    },
-    {
-      "id": "confession",
-      "title": "Confession",
+      "id": "mass-2026-07-04",
+      "title": "Saturday Evening Mass",
+      "date": "2026-07-04",
       "day": "Saturday",
-      "time": "4:30 PM",
-      "detail": "Parish Grounds"
+      "masses": [
+        "5:00 PM"
+      ],
+      "time": "5:00 PM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "Rosary begins before Mass on the parish grounds.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
     },
     {
-      "id": "adoration",
-      "title": "Adoration",
+      "id": "mass-2026-07-05",
+      "title": "Sunday Masses",
+      "date": "2026-07-05",
+      "day": "Sunday",
+      "masses": [
+        "6:30 AM",
+        "9:00 AM"
+      ],
+      "time": "6:30 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "Second Mass includes the larger parish family gathering.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-06",
+      "title": "Weekday Morning Mass",
+      "date": "2026-07-06",
+      "day": "Monday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-07",
+      "title": "Weekday Morning Mass",
+      "date": "2026-07-07",
+      "day": "Tuesday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-08",
+      "title": "Weekday Morning Mass",
+      "date": "2026-07-08",
+      "day": "Wednesday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-09",
+      "title": "Weekday Morning Mass",
+      "date": "2026-07-09",
+      "day": "Thursday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-10",
+      "title": "Friday Morning Mass",
+      "date": "2026-07-10",
       "day": "Friday",
-      "time": "5:00 PM",
-      "detail": "Main Church"
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Main Church",
+      "detail": "Main Church",
+      "note": "Adoration follows later in the day as announced by the parish office.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
     }
   ],
   "priests": [],

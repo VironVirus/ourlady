@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 import {
   ChevronDownIcon,
   CloseIcon,
@@ -31,7 +32,9 @@ type SiteHeaderProps = {
 
 export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openDesktopGroup, setOpenDesktopGroup] = useState<string | null>(null);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
   const primaryLinks = [
     { href: "/", label: "Home", icon: HomeIcon },
@@ -52,14 +55,12 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
     {
       label: "Associations",
       items: [
-        { href: "/associations", label: "All Associations", icon: UsersIcon },
-        ...(associations.length > 0
-          ? associations.map((item) => ({
-              href: `/associations/${item.slug}`,
-              label: item.shortName || item.name,
-              icon: UsersIcon
-            }))
-          : [])
+        { href: "/associations", label: "Overview", icon: UsersIcon },
+        ...associations.map((item) => ({
+          href: `/associations/${item.slug}`,
+          label: item.shortName || item.name,
+          icon: UsersIcon
+        }))
       ]
     },
     {
@@ -77,10 +78,23 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
     hrefs.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`));
   const isAdminPage = pathname.startsWith("/admin");
 
-  function closeMobileMenu() {
+  function closeMenus() {
     setMobileOpen(false);
+    setOpenDesktopGroup(null);
     setOpenMobileGroup(null);
   }
+
+  useEffect(() => {
+    function handlePointerDown(event: PointerEvent) {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setOpenDesktopGroup(null);
+      }
+    }
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, []);
 
   function toggleMobileMenu() {
     setMobileOpen((current) => {
@@ -97,7 +111,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
     return (
       <header className="site-header site-header--minimal">
         <div className="container site-header__inner">
-          <Link href="/" className="brand-mark" onClick={closeMobileMenu}>
+          <Link href="/" className="brand-mark" onClick={closeMenus}>
             <span className="brand-mark__seal">OL</span>
             <span className="brand-mark__text">
               <strong>Our Lady of Lourdes</strong>
@@ -112,9 +126,9 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
   const showActiveSaint = pathname === "/" && activeSaint;
 
   return (
-    <header className="site-header">
+    <header className="site-header" ref={headerRef}>
       <div className="container site-header__inner">
-        <Link href="/" className="brand-mark" onClick={closeMobileMenu}>
+        <Link href="/" className="brand-mark" onClick={closeMenus}>
           <span className="brand-mark__seal">OL</span>
           <span className="brand-mark__text">
             <strong>Our Lady of Lourdes</strong>
@@ -149,12 +163,23 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
             </div>
 
             {groupedNavigation.map((group) => (
-              <div key={group.label} className="desktop-dropdown">
+              <div
+                key={group.label}
+                className={`desktop-dropdown${
+                  openDesktopGroup === group.label ? " is-open" : ""
+                }`}
+              >
                 <button
                   type="button"
                   className={`desktop-dropdown__trigger${
                     isGroupActive(group.items) ? " is-active" : ""
                   }`}
+                  aria-expanded={openDesktopGroup === group.label}
+                  onClick={() =>
+                    setOpenDesktopGroup((current) =>
+                      current === group.label ? null : group.label
+                    )
+                  }
                 >
                   {group.label}
                   <ChevronDownIcon className="icon icon--tiny" />
@@ -162,12 +187,15 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                 <div className="desktop-dropdown__menu">
                   {group.items.map((item) => {
                     const Icon = item.icon;
+                    const isActive =
+                      pathname === item.href || pathname.startsWith(`${item.href}/`);
 
                     return (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className={pathname === item.href ? "is-active" : undefined}
+                        className={isActive ? "is-active" : undefined}
+                        onClick={() => setOpenDesktopGroup(null)}
                       >
                         <Icon className="icon icon--tiny" />
                         {item.label}
@@ -178,6 +206,10 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
               </div>
             ))}
           </nav>
+
+          <div className="site-header__theme">
+            <ThemeModeToggle />
+          </div>
 
           <button
             type="button"
@@ -196,7 +228,11 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
           <div className="container">
             <div className="site-mobile-menu__inner">
               {showActiveSaint ? (
-                <Link href={`/saints/${activeSaint.slug}`} className="site-mobile-menu__saint" onClick={closeMobileMenu}>
+                <Link
+                  href={`/saints/${activeSaint.slug}`}
+                  className="site-mobile-menu__saint"
+                  onClick={closeMenus}
+                >
                   <span>Saint Today</span>
                   <strong>{activeSaint.name}</strong>
                 </Link>
@@ -211,7 +247,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                       key={item.href}
                       href={item.href}
                       className={pathname === item.href ? "is-active" : undefined}
-                      onClick={closeMobileMenu}
+                      onClick={closeMenus}
                     >
                       <Icon className="icon icon--tiny" />
                       {item.label}
@@ -220,57 +256,60 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                 })}
               </div>
 
-              {groupedNavigation.map((group) => (
-                <div
-                  key={group.label}
-                  className={`site-mobile-dropdown${
-                    (openMobileGroup ? openMobileGroup === group.label : isGroupActive(group.items))
-                      ? " is-open"
-                      : ""
-                  }`}
-                >
-                  <button
-                    type="button"
-                    className="site-mobile-dropdown__trigger"
-                    aria-expanded={
-                      openMobileGroup ? openMobileGroup === group.label : isGroupActive(group.items)
-                    }
-                    onClick={() =>
-                      setOpenMobileGroup((current) =>
-                        current === group.label ? null : group.label
-                      )
-                    }
-                  >
-                    <span>{group.label}</span>
-                    <ChevronDownIcon className="icon icon--tiny" />
-                  </button>
-                  {(openMobileGroup ? openMobileGroup === group.label : isGroupActive(group.items)) ? (
-                    <div className="site-mobile-dropdown__content">
-                      <div className="site-mobile-menu__links">
-                        {group.items.map((item) => {
-                          const Icon = item.icon;
+              {groupedNavigation.map((group) => {
+                const isOpen = openMobileGroup
+                  ? openMobileGroup === group.label
+                  : isGroupActive(group.items);
 
-                          return (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              className={
-                                pathname === item.href || pathname.startsWith(`${item.href}/`)
-                                  ? "is-active"
-                                  : undefined
-                              }
-                              onClick={closeMobileMenu}
-                            >
-                              <Icon className="icon icon--tiny" />
-                              {item.label}
-                            </Link>
-                          );
-                        })}
+                return (
+                  <div
+                    key={group.label}
+                    className={`site-mobile-dropdown${isOpen ? " is-open" : ""}`}
+                  >
+                    <button
+                      type="button"
+                      className="site-mobile-dropdown__trigger"
+                      aria-expanded={isOpen}
+                      onClick={() =>
+                        setOpenMobileGroup((current) =>
+                          current === group.label ? null : group.label
+                        )
+                      }
+                    >
+                      <span>{group.label}</span>
+                      <ChevronDownIcon className="icon icon--tiny" />
+                    </button>
+                    {isOpen ? (
+                      <div className="site-mobile-dropdown__content">
+                        <div className="site-mobile-menu__links">
+                          {group.items.map((item) => {
+                            const Icon = item.icon;
+                            const isActive =
+                              pathname === item.href || pathname.startsWith(`${item.href}/`);
+
+                            return (
+                              <Link
+                                key={item.href}
+                                href={item.href}
+                                className={isActive ? "is-active" : undefined}
+                                onClick={closeMenus}
+                              >
+                                <Icon className="icon icon--tiny" />
+                                {item.label}
+                              </Link>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+                    ) : null}
+                  </div>
+                );
+              })}
+
+              <div className="site-mobile-menu__theme">
+                <span>Theme</span>
+                <ThemeModeToggle />
+              </div>
             </div>
           </div>
         </div>

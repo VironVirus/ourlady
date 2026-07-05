@@ -173,3 +173,37 @@ export function PlusIcon({ className }: IconProps) {
     </IconFrame>
   );
 }
+
+export function SunIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <circle cx="12" cy="12" r="3.2" />
+      <path d="M12 4.2v2" />
+      <path d="M12 17.8v2" />
+      <path d="m6.5 6.5 1.4 1.4" />
+      <path d="m16.1 16.1 1.4 1.4" />
+      <path d="M4.2 12h2" />
+      <path d="M17.8 12h2" />
+      <path d="m6.5 17.5 1.4-1.4" />
+      <path d="m16.1 7.9 1.4-1.4" />
+    </IconFrame>
+  );
+}
+
+export function MoonIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="M15.7 4.8a7.3 7.3 0 1 0 3.5 11.7A8 8 0 0 1 15.7 4.8Z" />
+    </IconFrame>
+  );
+}
+
+export function DeviceIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <rect x="4.5" y="5" width="15" height="10.5" rx="2" />
+      <path d="M9.2 19h5.6" />
+      <path d="M12 15.5V19" />
+    </IconFrame>
+  );
+}

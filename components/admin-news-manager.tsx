@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AdminImageUpload } from "@/components/admin-image-upload";
+import { NewsSlideshow } from "@/components/news-slideshow";
 import { HeartIcon, PlusIcon, ShareIcon, SparkIcon } from "@/components/site-icons";
+import { collectNewsImages, getNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { newsCategoryOptions, normalizeNewsCategory } from "@/lib/news-categories";
 import type { NewsPost } from "@/lib/news";
 
@@ -24,6 +26,7 @@ function createDraft(): NewsPost {
     date: "",
     location: "",
     image: "",
+    images: [],
     published: true,
     likes: 0,
     createdAt: "",
@@ -48,6 +51,7 @@ export function AdminNewsManager({
     ? draft
     : items.find((item) => item.id === selectedId) ?? null;
   const storyUrl = !creating && activeItem?.slug ? `/news/${activeItem.slug}` : "";
+  const activeImages = activeItem ? getNewsImages(activeItem) : [];
 
   function resetNotice() {
     setMessage("");
@@ -73,42 +77,44 @@ export function AdminNewsManager({
     resetNotice();
   }
 
-  function updateActive(key: keyof NewsPost, value: string | boolean | number) {
+  function setActiveItem(updater: (item: NewsPost) => NewsPost) {
     if (creating) {
-      setDraft((current) => {
-        const next = {
-          ...current,
-          [key]: key === "label" && typeof value === "string" ? normalizeNewsCategory(value) : value
-        };
-
-        if (key === "excerpt" && typeof value === "string") {
-          next.description = value;
-        }
-
-        return next;
-      });
-
+      setDraft((current) => updater(current));
       return;
     }
 
     setItems((current) =>
-      current.map((item) => {
-        if (item.id !== selectedId) {
-          return item;
-        }
-
-        const next = {
-          ...item,
-          [key]: key === "label" && typeof value === "string" ? normalizeNewsCategory(value) : value
-        };
-
-        if (key === "excerpt" && typeof value === "string") {
-          next.description = value;
-        }
-
-        return next;
-      })
+      current.map((item) => (item.id === selectedId ? updater(item) : item))
     );
+  }
+
+  function updateActive(key: keyof NewsPost, value: string | boolean | number) {
+    setActiveItem((current) => {
+      const next = {
+        ...current,
+        [key]: key === "label" && typeof value === "string" ? normalizeNewsCategory(value) : value
+      };
+
+      if (key === "excerpt" && typeof value === "string") {
+        next.description = value;
+      }
+
+      return next;
+    });
+  }
+
+  function updateImages(nextImages: string[]) {
+    const normalized = collectNewsImages(nextImages);
+
+    setActiveItem((current) => ({
+      ...current,
+      image: getPrimaryNewsImage({ images: normalized }),
+      images: normalized
+    }));
+  }
+
+  function removeImage(indexToRemove: number) {
+    updateImages(activeImages.filter((_, index) => index !== indexToRemove));
   }
 
   async function saveCurrent() {
@@ -263,7 +269,7 @@ export function AdminNewsManager({
               <div>
                 <div className="eyebrow">Editor</div>
                 <h2>{creating ? "Create News Story" : activeItem.title || "Edit News Story"}</h2>
-                <p>Write the preview, full story, image, and public link for this news post.</p>
+                <p>Write the preview, full story, slideshow images, and public link for this news post.</p>
               </div>
               <div className="admin-manager__actions">
                 <button type="button" className="button button--secondary" onClick={closeEditor}>
@@ -367,10 +373,18 @@ export function AdminNewsManager({
                 />
               </label>
               <label className="admin-field admin-field--full">
-                <span>Image Link</span>
-                <input
-                  value={activeItem.image ?? ""}
-                  onChange={(event) => updateActive("image", event.target.value)}
+                <span>Story Images</span>
+                <textarea
+                  rows={4}
+                  value={activeImages.join("\n")}
+                  onChange={(event) =>
+                    updateImages(
+                      event.target.value
+                        .split("\n")
+                        .map((item) => item.trim())
+                        .filter(Boolean)
+                    )
+                  }
                 />
               </label>
             </div>
@@ -378,23 +392,52 @@ export function AdminNewsManager({
             <AdminImageUpload
               enabled={uploadsEnabled}
               folder="news"
-              onUploaded={(url) => updateActive("image", url)}
+              buttonLabel="Upload Story Images"
+              fieldLabel="Story Image Upload"
+              multiple
+              onUploaded={(url) => updateImages([...activeImages, url])}
+              onUploadedMany={(urls) => updateImages([...activeImages, ...urls])}
             />
 
+            <div className="admin-image-stack">
+              <p className="admin-hint">
+                Add one image per line. The first image appears first in the slideshow.
+              </p>
+              {activeImages.length > 0 ? (
+                <div className="admin-image-list">
+                  {activeImages.map((imageUrl, index) => (
+                    <article key={`${imageUrl}-${index}`} className="admin-image-item">
+                      <div
+                        className="admin-image-item__preview"
+                        style={{ backgroundImage: `url(${imageUrl})` }}
+                      />
+                      <div className="admin-image-item__body">
+                        <strong>{index === 0 ? "Cover image" : `Slide ${index + 1}`}</strong>
+                        <small>{imageUrl}</small>
+                      </div>
+                      <button
+                        type="button"
+                        className="admin-link admin-link--danger"
+                        onClick={() => removeImage(index)}
+                      >
+                        Remove
+                      </button>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <p className="admin-hint">Upload one or more images to build the story slideshow.</p>
+              )}
+            </div>
+
             <div className="admin-story-preview">
-              <article
-                className="story-card story-card--photo"
-                style={
-                  activeItem.image
-                    ? {
-                        backgroundImage: `linear-gradient(180deg, rgba(17, 12, 9, 0.18), rgba(17, 12, 9, 0.78)), url(${activeItem.image})`,
-                        backgroundPosition: "center",
-                        backgroundRepeat: "no-repeat",
-                        backgroundSize: "cover"
-                      }
-                    : undefined
-                }
-              >
+              <article className="story-card story-card--photo">
+                <NewsSlideshow
+                  className="story-card__media"
+                  images={activeImages}
+                  emptyLabel="No story image added"
+                  overlay="linear-gradient(180deg, rgba(17, 12, 9, 0.18), rgba(17, 12, 9, 0.78))"
+                />
                 <div className="story-card__content">
                   <span className="section-badge section-badge--light">
                     <SparkIcon className="icon" />

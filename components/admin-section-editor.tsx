@@ -5,6 +5,11 @@ import { saveSiteContentAction } from "@/app/admin/actions";
 import { AdminImageUpload } from "@/components/admin-image-upload";
 import { newsCategoryOptions } from "@/lib/news-categories";
 import {
+  getDateKeyRange,
+  getMassDateLabel,
+  getSiteDateKey
+} from "@/lib/site-runtime";
+import {
   getThemePresetPalette,
   themePresetOptions,
   type ThemePresetKey
@@ -74,9 +79,20 @@ function createMassDraft(): MassScheduleItem {
   return {
     id: `mass-${Date.now()}`,
     title: "",
+    date: "",
     day: "",
+    masses: [],
     time: "",
-    detail: ""
+    venue: "",
+    detail: "",
+    note: "",
+    liturgyTitle: "",
+    liturgySeason: "",
+    liturgyColor: "",
+    saintSlug: "",
+    readingQuote: "",
+    readingReference: "",
+    reflectionTheme: ""
   };
 }
 
@@ -204,6 +220,19 @@ function hasValue(values: string[]) {
   return values.some((value) => value.trim().length > 0);
 }
 
+function sortMassScheduleItems(items: MassScheduleItem[]) {
+  return [...items].sort((left, right) => {
+    const leftDate = left.date || "";
+    const rightDate = right.date || "";
+
+    return (
+      leftDate.localeCompare(rightDate) ||
+      left.title.localeCompare(right.title) ||
+      left.id.localeCompare(right.id)
+    );
+  });
+}
+
 function SectionEmptyState({ label }: { label: string }) {
   return (
     <div className="admin-card admin-card--empty">
@@ -326,7 +355,29 @@ export function AdminSectionEditor({
     setContent((current) => ({
       ...current,
       massSchedule: current.massSchedule.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, [key]: value } : item
+        itemIndex === index
+          ? {
+              ...item,
+              [key]: value,
+              ...(key === "venue" ? { detail: value } : {}),
+              ...(key === "date" && value ? { day: getMassDateLabel(value).weekday } : {})
+            }
+          : item
+      )
+    }));
+  }
+
+  function updateMassTimes(index: number, value: string) {
+    setContent((current) => ({
+      ...current,
+      massSchedule: current.massSchedule.map((item, itemIndex) =>
+        itemIndex === index
+          ? {
+              ...item,
+              masses: fromLines(value),
+              time: fromLines(value)[0] || ""
+            }
+          : item
       )
     }));
   }
@@ -488,19 +539,81 @@ export function AdminSectionEditor({
   }
 
   function addMassScheduleItem() {
-    if (!hasValue([massDraft.title, massDraft.day, massDraft.time, massDraft.detail])) {
+    if (!massDraft.date || massDraft.masses.length === 0) {
       return;
     }
 
+    const massDay = getMassDateLabel(massDraft.date).weekday;
+
     setContent((current) => ({
       ...current,
-      massSchedule: [...current.massSchedule, massDraft]
+      massSchedule: sortMassScheduleItems([
+        ...current.massSchedule,
+        {
+          ...massDraft,
+          day: massDraft.day || massDay,
+          time: massDraft.masses[0] || massDraft.time,
+          detail: massDraft.venue || massDraft.detail
+        }
+      ])
     }));
     setOpenEditors((current) => ({
       ...current,
-      massSchedule: content.massSchedule.length
+      massSchedule: null
     }));
     setMassDraft(createMassDraft());
+  }
+
+  function generateNextMassWeek() {
+    setContent((current) => {
+      const sortedItems = sortMassScheduleItems(current.massSchedule);
+      const lastScheduledDate = sortedItems
+        .map((item) => item.date)
+        .filter(Boolean)
+        .at(-1);
+      const startDate = lastScheduledDate
+        ? getDateKeyRange(lastScheduledDate, 2)[1]
+        : getSiteDateKey();
+      const generatedItems = getDateKeyRange(startDate, 7).map((dateKey, index) => {
+        const labels = getMassDateLabel(dateKey);
+        const template =
+          [...sortedItems]
+            .reverse()
+            .find((item) => {
+              const itemDay = item.date ? getMassDateLabel(item.date).weekday : item.day;
+
+              return itemDay === labels.weekday;
+            }) ?? sortedItems.at(-1);
+
+        return {
+          id: `mass-${dateKey}-${Date.now()}-${index}`,
+          title: template?.title || `${labels.weekday} Mass`,
+          date: dateKey,
+          day: labels.weekday,
+          masses: template?.masses.length ? [...template.masses] : [],
+          time: template?.masses[0] || template?.time || "",
+          venue: template?.venue || template?.detail || "Main Church",
+          detail: template?.venue || template?.detail || "Main Church",
+          note: "",
+          liturgyTitle: "",
+          liturgySeason: "",
+          liturgyColor: "",
+          saintSlug: "",
+          readingQuote: "",
+          readingReference: "",
+          reflectionTheme: ""
+        } satisfies MassScheduleItem;
+      });
+
+      return {
+        ...current,
+        massSchedule: sortMassScheduleItems([...current.massSchedule, ...generatedItems])
+      };
+    });
+    setOpenEditors((current) => ({
+      ...current,
+      massSchedule: null
+    }));
   }
 
   function addAnnouncement() {
@@ -1053,7 +1166,7 @@ export function AdminSectionEditor({
           <div>
             <div className="eyebrow">Mass Scheduling</div>
             <h2>Weekly church times</h2>
-            <p>Add one schedule item at a time, then update the list below for each week.</p>
+            <p>Build the week, then open any day to edit it.</p>
           </div>
         </div>
 
@@ -1077,14 +1190,37 @@ export function AdminSectionEditor({
         <div className="admin-subsection">
           <div className="admin-subsection__head">
             <div>
-              <h3>Add Schedule Item</h3>
-              <p className="admin-hint">Create a new Mass, confession, or adoration entry.</p>
+              <h3>Add Schedule Day</h3>
+              <p className="admin-hint">Add one day, or generate the next full week instantly.</p>
             </div>
-            <button type="button" className="button button--secondary" onClick={addMassScheduleItem}>
-              Add Schedule Item
-            </button>
+            <div className="admin-inline-actions">
+              <button
+                type="button"
+                className="button button--secondary"
+                onClick={generateNextMassWeek}
+              >
+                Generate Next 7 Days
+              </button>
+              <button
+                type="button"
+                className="button button--secondary"
+                onClick={addMassScheduleItem}
+              >
+                Add Schedule Day
+              </button>
+            </div>
           </div>
           <div className="admin-grid">
+            <label className="admin-field">
+              <span>Date</span>
+              <input
+                type="date"
+                value={massDraft.date}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, date: event.target.value }))
+                }
+              />
+            </label>
             <label className="admin-field">
               <span>Title</span>
               <input
@@ -1093,25 +1229,115 @@ export function AdminSectionEditor({
               />
             </label>
             <label className="admin-field">
-              <span>Day</span>
+              <span>Venue</span>
               <input
-                value={massDraft.day}
-                onChange={(event) => setMassDraft((current) => ({ ...current, day: event.target.value }))}
+                value={massDraft.venue}
+                onChange={(event) =>
+                  setMassDraft((current) => ({
+                    ...current,
+                    venue: event.target.value,
+                    detail: event.target.value
+                  }))
+                }
               />
             </label>
             <label className="admin-field">
-              <span>Time</span>
-              <input
-                value={massDraft.time}
-                onChange={(event) => setMassDraft((current) => ({ ...current, time: event.target.value }))}
+              <span>Saint Story</span>
+              <select
+                value={massDraft.saintSlug}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, saintSlug: event.target.value }))
+                }
+              >
+                <option value="">Use saint scheduled for that date</option>
+                {content.saints.map((saint) => (
+                  <option key={saint.slug} value={saint.slug}>
+                    {saint.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="admin-field admin-field--full">
+              <span>Mass Times</span>
+              <textarea
+                rows={4}
+                value={toLines(massDraft.masses)}
+                onChange={(event) =>
+                  setMassDraft((current) => ({
+                    ...current,
+                    masses: fromLines(event.target.value),
+                    time: fromLines(event.target.value)[0] || ""
+                  }))
+                }
               />
             </label>
             <label className="admin-field admin-field--full">
-              <span>Detail</span>
+              <span>Mass Reading Quote</span>
               <textarea
                 rows={3}
-                value={massDraft.detail}
-                onChange={(event) => setMassDraft((current) => ({ ...current, detail: event.target.value }))}
+                value={massDraft.readingQuote}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, readingQuote: event.target.value }))
+                }
+              />
+            </label>
+            <label className="admin-field">
+              <span>Reading Reference</span>
+              <input
+                value={massDraft.readingReference}
+                onChange={(event) =>
+                  setMassDraft((current) => ({
+                    ...current,
+                    readingReference: event.target.value
+                  }))
+                }
+              />
+            </label>
+            <label className="admin-field">
+              <span>Reflection Theme</span>
+              <input
+                value={massDraft.reflectionTheme}
+                onChange={(event) =>
+                  setMassDraft((current) => ({
+                    ...current,
+                    reflectionTheme: event.target.value
+                  }))
+                }
+              />
+            </label>
+            <label className="admin-field">
+              <span>Feast / Celebration Override</span>
+              <input
+                value={massDraft.liturgyTitle}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, liturgyTitle: event.target.value }))
+                }
+              />
+            </label>
+            <label className="admin-field">
+              <span>Season Override</span>
+              <input
+                value={massDraft.liturgySeason}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, liturgySeason: event.target.value }))
+                }
+              />
+            </label>
+            <label className="admin-field">
+              <span>Color Override</span>
+              <input
+                value={massDraft.liturgyColor}
+                onChange={(event) =>
+                  setMassDraft((current) => ({ ...current, liturgyColor: event.target.value }))
+                }
+              />
+            </label>
+            <label className="admin-field admin-field--full">
+              <span>Note</span>
+              <textarea
+                rows={3}
+                value={massDraft.note}
+                onChange={(event) => setMassDraft((current) => ({ ...current, note: event.target.value }))}
               />
             </label>
           </div>
@@ -1122,13 +1348,21 @@ export function AdminSectionEditor({
           {content.massSchedule.map((item, index) => (
             <ExpandableAdminItem
               key={item.id}
-              title={item.title || `Schedule Item ${index + 1}`}
-              meta={`${item.day || "No day"} · ${item.time || "No time"}`}
+              title={item.title || `Schedule Day ${index + 1}`}
+              meta={`${item.date || item.day || "No date"} · ${item.masses[0] || item.time || "No Mass time"}`}
               isOpen={isEditorOpen("massSchedule", index)}
               onToggle={() => toggleEditor("massSchedule", index)}
               onRemove={() => removeAt("massSchedule", index)}
             >
               <div className="admin-grid">
+                <label className="admin-field">
+                  <span>Date</span>
+                  <input
+                    type="date"
+                    value={item.date}
+                    onChange={(event) => updateMassSchedule(index, "date", event.target.value)}
+                  />
+                </label>
                 <label className="admin-field">
                   <span>Title</span>
                   <input
@@ -1137,25 +1371,89 @@ export function AdminSectionEditor({
                   />
                 </label>
                 <label className="admin-field">
-                  <span>Day</span>
+                  <span>Venue</span>
                   <input
-                    value={item.day}
-                    onChange={(event) => updateMassSchedule(index, "day", event.target.value)}
-                  />
-                </label>
-                <label className="admin-field">
-                  <span>Time</span>
-                  <input
-                    value={item.time}
-                    onChange={(event) => updateMassSchedule(index, "time", event.target.value)}
+                    value={item.venue}
+                    onChange={(event) => updateMassSchedule(index, "venue", event.target.value)}
                   />
                 </label>
                 <label className="admin-field admin-field--full">
-                  <span>Detail</span>
+                  <span>Mass Times</span>
+                  <textarea
+                    rows={4}
+                    value={toLines(item.masses)}
+                    onChange={(event) => updateMassTimes(index, event.target.value)}
+                  />
+                </label>
+                <label className="admin-field admin-field--full">
+                  <span>Mass Reading Quote</span>
                   <textarea
                     rows={3}
-                    value={item.detail}
-                    onChange={(event) => updateMassSchedule(index, "detail", event.target.value)}
+                    value={item.readingQuote}
+                    onChange={(event) =>
+                      updateMassSchedule(index, "readingQuote", event.target.value)
+                    }
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Reading Reference</span>
+                  <input
+                    value={item.readingReference}
+                    onChange={(event) =>
+                      updateMassSchedule(index, "readingReference", event.target.value)
+                    }
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Reflection Theme</span>
+                  <input
+                    value={item.reflectionTheme}
+                    onChange={(event) =>
+                      updateMassSchedule(index, "reflectionTheme", event.target.value)
+                    }
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Feast / Celebration Override</span>
+                  <input
+                    value={item.liturgyTitle}
+                    onChange={(event) => updateMassSchedule(index, "liturgyTitle", event.target.value)}
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Season Override</span>
+                  <input
+                    value={item.liturgySeason}
+                    onChange={(event) => updateMassSchedule(index, "liturgySeason", event.target.value)}
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Color Override</span>
+                  <input
+                    value={item.liturgyColor}
+                    onChange={(event) => updateMassSchedule(index, "liturgyColor", event.target.value)}
+                  />
+                </label>
+                <label className="admin-field">
+                  <span>Saint Story</span>
+                  <select
+                    value={item.saintSlug}
+                    onChange={(event) => updateMassSchedule(index, "saintSlug", event.target.value)}
+                  >
+                    <option value="">Use saint scheduled for that date</option>
+                    {content.saints.map((saint) => (
+                      <option key={saint.slug} value={saint.slug}>
+                        {saint.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="admin-field admin-field--full">
+                  <span>Note</span>
+                  <textarea
+                    rows={3}
+                    value={item.note}
+                    onChange={(event) => updateMassSchedule(index, "note", event.target.value)}
                   />
                 </label>
               </div>

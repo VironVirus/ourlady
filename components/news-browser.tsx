@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { NewsSlideshow } from "@/components/news-slideshow";
 import { SparkIcon } from "@/components/site-icons";
+import { getNewsImages } from "@/lib/news-images";
 import type { NewsPost } from "@/lib/news";
-import { churchPhotos } from "@/lib/site-media";
 
 type NewsBrowserProps = {
   items: NewsPost[];
@@ -26,8 +27,7 @@ export function NewsBrowser({ items }: NewsBrowserProps) {
   if (items.length === 0) {
     return (
       <div className="panel empty-state">
-        <h2>Parish news will appear here soon.</h2>
-        <p>Recent stories, events, and community moments will be added from the admin area.</p>
+        <h2>No news yet.</h2>
       </div>
     );
   }
@@ -64,14 +64,10 @@ export function NewsBrowser({ items }: NewsBrowserProps) {
               Read Full Story
             </Link>
           </div>
-          <div
+          <NewsSlideshow
             className="news-feature__image"
-            style={{
-              backgroundImage: `linear-gradient(180deg, rgba(17, 12, 9, 0.1), rgba(17, 12, 9, 0.38)), url(${
-                featured.image || churchPhotos.processionStreet.src
-              })`
-            }}
-            aria-label={featured.title}
+            images={getNewsImages(featured)}
+            emptyLabel="No story image"
           />
         </article>
       ) : null}
@@ -79,19 +75,27 @@ export function NewsBrowser({ items }: NewsBrowserProps) {
       <div className="news-browser__grid">
         {rest.map((item) => (
           <article key={item.id} className="news-preview-card">
-            <span className="section-badge">
-              <SparkIcon className="icon" />
-              {item.label}
-            </span>
-            <h3>{item.title}</h3>
-            <p>{item.excerpt || item.description}</p>
-            <div className="story-card__meta">
-              <span>{item.date}</span>
-              <span>{item.location}</span>
+            <NewsSlideshow
+              className="news-preview-card__image"
+              images={getNewsImages(item)}
+              emptyLabel="No story image"
+              overlay="linear-gradient(180deg, rgba(17, 12, 9, 0.06), rgba(17, 12, 9, 0.3))"
+            />
+            <div className="news-preview-card__body">
+              <span className="section-badge">
+                <SparkIcon className="icon" />
+                {item.label}
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.excerpt || item.description}</p>
+              <div className="story-card__meta">
+                <span>{item.date}</span>
+                <span>{item.location}</span>
+              </div>
+              <Link href={`/news/${item.slug}`} className="text-link">
+                Open story
+              </Link>
             </div>
-            <Link href={`/news/${item.slug}`} className="text-link">
-              Open story
-            </Link>
           </article>
         ))}
       </div>

@@ -23,7 +23,6 @@ export function PrayerBrowser({ items }: PrayerBrowserProps) {
     return (
       <div className="panel empty-state">
         <h2>No prayers yet.</h2>
-        <p>Prayer write-ups can be added from the admin area when ready.</p>
       </div>
     );
   }

@@ -10,6 +10,7 @@ import {
   isNetlifyProduction,
   remoteStorageRequiredMessage
 } from "@/lib/deployment";
+import { collectNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { normalizeNewsCategory } from "@/lib/news-categories";
 import { slugify } from "@/lib/slug";
 import {
@@ -21,9 +22,20 @@ import {
 export type MassScheduleItem = {
   id: string;
   title: string;
+  date: string;
   day: string;
+  masses: string[];
   time: string;
+  venue: string;
   detail: string;
+  note: string;
+  liturgyTitle: string;
+  liturgySeason: string;
+  liturgyColor: string;
+  saintSlug: string;
+  readingQuote: string;
+  readingReference: string;
+  reflectionTheme: string;
 };
 
 export type PriestProfile = {
@@ -82,6 +94,7 @@ export type NewsItem = {
   date: string;
   location: string;
   image?: string;
+  images?: string[];
   published: boolean;
   likes: number;
 };
@@ -234,6 +247,17 @@ function asStringArray(value: unknown) {
     : [];
 }
 
+function asScheduleLines(value: unknown) {
+  if (Array.isArray(value)) {
+    return asStringArray(value);
+  }
+
+  return asString(value)
+    .split(/\n+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 function asBoolean(value: unknown, fallback = false) {
   return typeof value === "boolean" ? value : fallback;
 }
@@ -269,13 +293,31 @@ function sanitizeMassSchedule(value: unknown): MassScheduleItem[] {
   return value.map((item, index) => {
     const entry = item as Partial<MassScheduleItem>;
     const title = asString(entry.title);
+    const masses = asScheduleLines(entry.masses).length
+      ? asScheduleLines(entry.masses)
+      : asString(entry.time)
+        ? [asString(entry.time)]
+        : [];
+    const venue = asString(entry.venue) || asString(entry.detail);
+    const detail = asString(entry.detail) || venue;
 
     return {
       id: asString(entry.id) || withId("mass", title, index),
       title,
+      date: asString(entry.date),
       day: asString(entry.day),
-      time: asString(entry.time),
-      detail: asString(entry.detail)
+      masses,
+      time: asString(entry.time) || masses[0] || "",
+      venue,
+      detail,
+      note: asString(entry.note),
+      liturgyTitle: asString(entry.liturgyTitle),
+      liturgySeason: asString(entry.liturgySeason),
+      liturgyColor: asString(entry.liturgyColor),
+      saintSlug: asString(entry.saintSlug),
+      readingQuote: asString(entry.readingQuote),
+      readingReference: asString(entry.readingReference),
+      reflectionTheme: asString(entry.reflectionTheme)
     };
   });
 }
@@ -389,6 +431,7 @@ function sanitizeNewsItems(value: unknown): NewsItem[] {
     const title = asString(entry.title);
     const excerpt = asString(entry.excerpt) || asString(entry.description);
     const content = asString(entry.content) || excerpt;
+    const images = collectNewsImages(entry.images, entry.image);
 
     return {
       id: asString(entry.id) || withId("news", title, index),
@@ -400,7 +443,8 @@ function sanitizeNewsItems(value: unknown): NewsItem[] {
       content,
       date: asString(entry.date),
       location: asString(entry.location),
-      image: asString(entry.image),
+      image: getPrimaryNewsImage({ image: entry.image, images }),
+      images,
       published: asBoolean(entry.published, true),
       likes: asNumber(entry.likes)
     };

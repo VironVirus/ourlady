@@ -2,6 +2,7 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
+import { collectNewsImages } from "@/lib/news-images";
 import { normalizeNewsCategory } from "@/lib/news-categories";
 import { saveNewsPost } from "@/lib/news";
 
@@ -34,6 +35,7 @@ export async function POST(request: Request) {
       date: asString(body.date),
       location: asString(body.location),
       image: asString(body.image),
+      images: collectNewsImages(body.images, body.image),
       published: body.published !== false,
       likes: typeof body.likes === "number" ? body.likes : 0
     });

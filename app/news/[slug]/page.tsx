@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { NewsSlideshow } from "@/components/news-slideshow";
 import { NewsStoryActions } from "@/components/news-story-actions";
 import { PageIntro } from "@/components/page-intro";
 import { SparkIcon } from "@/components/site-icons";
+import { getNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { getNewsPostBySlug, getPublishedNewsPosts } from "@/lib/news";
-import { churchPhotos } from "@/lib/site-media";
 
 type NewsStoryPageProps = {
   params: Promise<{
@@ -50,6 +51,8 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
   }
 
   const paragraphs = toParagraphs(item.content || item.excerpt || item.description);
+  const storyImages = getNewsImages(item);
+  const primaryImage = getPrimaryNewsImage(item);
   const relatedStories = newsItems
     .filter((entry) => entry.slug !== item.slug && entry.label === item.label)
     .slice(0, 3);
@@ -60,7 +63,7 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
         eyebrow={item.label || "News"}
         title={item.title}
         description={item.excerpt || item.description}
-        image={item.image || churchPhotos.processionStreet.src}
+        image={primaryImage || undefined}
         position="center"
       />
 
@@ -78,6 +81,14 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
               initialLikes={item.likes}
             />
 
+            {storyImages.length > 0 ? (
+              <NewsSlideshow
+                className="story-article__gallery"
+                images={storyImages}
+                overlay="linear-gradient(180deg, rgba(17, 12, 9, 0.06), rgba(17, 12, 9, 0.28))"
+              />
+            ) : null}
+
             <div className="story-article__body">
               {paragraphs.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -92,7 +103,7 @@ export default async function NewsStoryPage({ params }: NewsStoryPageProps) {
                 {item.label}
               </span>
               <h2>Read and share</h2>
-              <p>This story has its own public link, so it can be opened and shared directly.</p>
+              <p>Share this story with family and friends.</p>
               <Link href="/news" className="text-link">
                 Back to all news
               </Link>

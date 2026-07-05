@@ -5,21 +5,49 @@ import { SiteBottomNav } from "@/components/site-bottom-nav";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSiteContent } from "@/lib/content";
-import { getActiveSaint, resolveThemeSettings } from "@/lib/site-runtime";
+import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
+import {
+  getActiveSaint,
+  getMassEntryForDate,
+  getMassTimes,
+  getSiteDateKey,
+  getRollingMassWeek,
+  resolveThemePreset
+} from "@/lib/site-runtime";
+import { getThemePresetVariableSet } from "@/lib/theme-presets";
 
 export const metadata: Metadata = {
   title: "Our Lady of Lourdes Catholic Church, Maryland, Enugu",
-  description:
-    "A modern parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu with church updates, news, blogs, and ministry dashboards."
+  description: "Catholic parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu."
 };
 
-function buildThemeStyle(theme: Awaited<ReturnType<typeof getSiteContent>>["theme"]) {
+function buildThemeStyle(preset: Parameters<typeof getThemePresetVariableSet>[0]) {
+  const lightTheme = getThemePresetVariableSet(preset, "light");
+  const darkTheme = getThemePresetVariableSet(preset, "dark");
+
   return {
-    "--background": theme.background,
-    "--background-soft": theme.backgroundSoft,
-    "--brand": theme.primary,
-    "--brand-deep": theme.secondary,
-    "--brand-soft": theme.accent
+    "--theme-background-light": lightTheme.background,
+    "--theme-background-soft-light": lightTheme.backgroundSoft,
+    "--theme-surface-light": lightTheme.surface,
+    "--theme-surface-strong-light": lightTheme.surfaceStrong,
+    "--theme-text-light": lightTheme.text,
+    "--theme-muted-light": lightTheme.muted,
+    "--theme-line-light": lightTheme.line,
+    "--theme-brand-light": lightTheme.primary,
+    "--theme-brand-deep-light": lightTheme.secondary,
+    "--theme-brand-soft-light": lightTheme.accent,
+    "--theme-shadow-light": lightTheme.shadow,
+    "--theme-background-dark": darkTheme.background,
+    "--theme-background-soft-dark": darkTheme.backgroundSoft,
+    "--theme-surface-dark": darkTheme.surface,
+    "--theme-surface-strong-dark": darkTheme.surfaceStrong,
+    "--theme-text-dark": darkTheme.text,
+    "--theme-muted-dark": darkTheme.muted,
+    "--theme-line-dark": darkTheme.line,
+    "--theme-brand-dark": darkTheme.primary,
+    "--theme-brand-deep-dark": darkTheme.secondary,
+    "--theme-brand-soft-dark": darkTheme.accent,
+    "--theme-shadow-dark": darkTheme.shadow
   } as CSSProperties;
 }
 
@@ -28,18 +56,27 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const content = await getSiteContent();
-  const activeSaint = getActiveSaint(content);
-  const sundayTimes = content.massSchedule
-    .filter((item) => item.day.toLowerCase().includes("sunday"))
-    .map((item) => item.time)
-    .slice(0, 2)
-    .join(" · ");
-  const massSummary = sundayTimes ? `Sunday · ${sundayTimes}` : "Mass times updated weekly";
+  const dateKey = getSiteDateKey();
+  const [content, liturgicalDay] = await Promise.all([
+    getSiteContent(),
+    getLiturgicalDayInfo(dateKey)
+  ]);
+  const activeSaint = getActiveSaint(content, dateKey);
+  const nextMassEntry = getRollingMassWeek(content).find((entry) => entry.item);
+  const nextMassDay = nextMassEntry?.item ?? null;
+  const nextMassTimes = nextMassDay ? getMassTimes(nextMassDay).slice(0, 2).join(" · ") : "";
+  const todayMassEntry = getMassEntryForDate(content, dateKey);
+  const themeColor =
+    todayMassEntry?.item?.liturgyColor || liturgicalDay?.color || "";
+  const themePreset = resolveThemePreset(content, dateKey, themeColor);
+  const massSummary =
+    nextMassDay && nextMassTimes
+      ? `${nextMassEntry?.labels.weekday || "Next Mass"} · ${nextMassTimes}`
+      : "Mass times updated weekly";
 
   return (
-    <html lang="en">
-      <body style={buildThemeStyle(resolveThemeSettings(content))}>
+    <html lang="en" data-appearance="system">
+      <body style={buildThemeStyle(themePreset)}>
         <div className="site-shell">
           <SiteHeader
             activeSaint={

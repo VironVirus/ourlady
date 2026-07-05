@@ -11,7 +11,7 @@ export default async function NewsPage() {
       <PageIntro
         eyebrow="News"
         title="Parish News"
-        description="Stories, gatherings, and parish updates."
+        description="Stories and updates from the parish."
         image={churchPhotos.processionStreet.src}
         position={churchPhotos.processionStreet.position}
       />

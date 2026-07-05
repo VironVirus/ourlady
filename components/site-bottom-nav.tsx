@@ -14,8 +14,8 @@ const bottomLinks = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/mass-schedule", label: "Mass", icon: ClockIcon },
   { href: "/news", label: "News", icon: SparkIcon },
-  { href: "/associations", label: "Groups", icon: UsersIcon },
-  { href: "/contact", label: "Contact", icon: CrossIcon }
+  { href: "/prayers", label: "Prayers", icon: CrossIcon },
+  { href: "/associations", label: "Groups", icon: UsersIcon }
 ];
 
 export function SiteBottomNav() {

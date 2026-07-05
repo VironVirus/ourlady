@@ -34,7 +34,6 @@ export default async function AnnouncementsPage() {
           ) : (
             <div className="panel empty-state">
               <h2>No announcements yet.</h2>
-              <p>Announcements can be published from the admin area when needed.</p>
             </div>
           )}
         </div>

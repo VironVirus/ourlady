@@ -9,6 +9,11 @@ import {
   getSupabaseAdmin,
   newsPostsTable
 } from "@/lib/supabase-admin";
+import {
+  collectNewsImages,
+  encodeNewsImages,
+  getPrimaryNewsImage
+} from "@/lib/news-images";
 import { normalizeNewsCategory } from "@/lib/news-categories";
 import { slugify } from "@/lib/slug";
 
@@ -52,6 +57,7 @@ function normalizeNewsPost(
   const title = asString(input.title);
   const excerpt = asString(input.excerpt) || asString(input.description);
   const content = asString(input.content) || excerpt;
+  const images = collectNewsImages(input.images, input.image);
 
   return {
     id: asString(input.id) || fallbackId,
@@ -63,7 +69,8 @@ function normalizeNewsPost(
     content,
     date: asString(input.date),
     location: asString(input.location),
-    image: asString(input.image),
+    image: getPrimaryNewsImage({ image: input.image, images }),
+    images,
     published: asBoolean(input.published, true),
     likes: asNumber(input.likes),
     createdAt: asString(input.createdAt),
@@ -93,6 +100,8 @@ function fromSupabaseRecord(record: NewsRecord, fallbackIndex = 0): NewsPost {
 }
 
 function toSupabaseRecord(post: NewsPost) {
+  const images = collectNewsImages(post.images, post.image);
+
   return {
     id: post.id || randomUUID(),
     slug: slugify(post.slug || post.title || post.id, post.id || "news"),
@@ -102,7 +111,7 @@ function toSupabaseRecord(post: NewsPost) {
     content: post.content || post.excerpt || post.description,
     date_text: post.date,
     location: post.location,
-    image_url: post.image || null,
+    image_url: encodeNewsImages(images),
     is_published: post.published,
     like_count: post.likes,
     updated_at: new Date().toISOString()

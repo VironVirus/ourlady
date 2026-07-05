@@ -8,10 +8,12 @@ type AdminImageUploadProps = {
   enabled: boolean;
   folder: string;
   onUploaded: (url: string) => void;
+  onUploadedMany?: (urls: string[]) => void;
   accept?: string;
   buttonLabel?: string;
   fieldLabel?: string;
   kind?: "image" | "document";
+  multiple?: boolean;
 };
 
 function formatFileSize(size: number) {
@@ -112,19 +114,22 @@ export function AdminImageUpload({
   enabled,
   folder,
   onUploaded,
+  onUploadedMany,
   accept = "image/*",
   buttonLabel = "Upload Image",
   fieldLabel = "Image Upload",
-  kind = "image"
+  kind = "image",
+  multiple = false
 }: AdminImageUploadProps) {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [uploading, setUploading] = useState(false);
   const [inputKey, setInputKey] = useState(0);
+  const firstSelectedFile = selectedFiles[0];
 
-  async function uploadSelectedFile() {
-    if (!selectedFile || uploading || !enabled) {
+  async function uploadSelectedFiles() {
+    if (selectedFiles.length === 0 || uploading || !enabled) {
       return;
     }
 
@@ -133,35 +138,57 @@ export function AdminImageUpload({
     setError("");
 
     try {
-      const fileToUpload =
-        kind === "image" ? await optimizeImageFile(selectedFile) : selectedFile;
-      const formData = new FormData();
-      formData.append("file", fileToUpload);
-      formData.append("folder", folder);
-      formData.append("kind", kind);
+      const uploadedUrls: string[] = [];
+      let lastUploadedSize = 0;
 
-      const response = await fetch("/api/admin/upload", {
-        method: "POST",
-        body: formData
-      });
-      const result = (await response.json()) as {
-        error?: string;
-        url?: string;
-      };
+      for (const selectedFile of selectedFiles) {
+        const fileToUpload =
+          kind === "image" ? await optimizeImageFile(selectedFile) : selectedFile;
+        const formData = new FormData();
+        formData.append("file", fileToUpload);
+        formData.append("folder", folder);
+        formData.append("kind", kind);
 
-      if (!response.ok || !result.url) {
-        setError(result.error ?? `${fieldLabel} failed.`);
+        const response = await fetch("/api/admin/upload", {
+          method: "POST",
+          body: formData
+        });
+        const result = (await response.json()) as {
+          error?: string;
+          url?: string;
+        };
+
+        if (!response.ok || !result.url) {
+          setError(result.error ?? `${fieldLabel} failed.`);
+          return;
+        }
+
+        uploadedUrls.push(result.url);
+        lastUploadedSize = fileToUpload.size;
+      }
+
+      if (uploadedUrls.length === 0) {
+        setError(`${fieldLabel} failed.`);
         return;
       }
 
-      onUploaded(result.url);
-      setSelectedFile(null);
+      if (multiple && onUploadedMany) {
+        onUploadedMany(uploadedUrls);
+      } else {
+        onUploaded(uploadedUrls[0]);
+      }
+
+      setSelectedFiles([]);
       setInputKey((current) => current + 1);
-      setMessage(
-        kind === "image"
-          ? `${fieldLabel} complete. Optimized to ${formatFileSize(fileToUpload.size)}.`
-          : `${fieldLabel} complete.`
-      );
+      if (kind === "image") {
+        setMessage(
+          uploadedUrls.length > 1
+            ? `${fieldLabel} complete. ${uploadedUrls.length} images uploaded.`
+            : `${fieldLabel} complete. Optimized to ${formatFileSize(lastUploadedSize)}.`
+        );
+      } else {
+        setMessage(`${fieldLabel} complete.`);
+      }
     } catch {
       setError(
         kind === "image"
@@ -181,15 +208,16 @@ export function AdminImageUpload({
           key={inputKey}
           type="file"
           accept={accept}
+          multiple={multiple}
           disabled={!enabled || uploading}
-          onChange={(event) => setSelectedFile(event.target.files?.[0] ?? null)}
+          onChange={(event) => setSelectedFiles(Array.from(event.target.files ?? []))}
         />
       </label>
       <button
         type="button"
         className="button button--secondary"
-        disabled={!enabled || !selectedFile || uploading}
-        onClick={uploadSelectedFile}
+        disabled={!enabled || selectedFiles.length === 0 || uploading}
+        onClick={uploadSelectedFiles}
       >
         {uploading ? "Uploading..." : buttonLabel}
       </button>
@@ -199,8 +227,13 @@ export function AdminImageUpload({
       {kind === "image" ? (
         <p className="admin-hint">Images are converted to WebP and kept under 2MB before upload.</p>
       ) : null}
-      {selectedFile ? (
-        <p className="admin-hint">Selected: {selectedFile.name} · {formatFileSize(selectedFile.size)}</p>
+      {selectedFiles.length > 0 ? (
+        <p className="admin-hint">
+          Selected:{" "}
+          {selectedFiles.length === 1
+            ? `${firstSelectedFile?.name ?? "file"} · ${formatFileSize(firstSelectedFile?.size ?? 0)}`
+            : `${selectedFiles.length} files ready for upload`}
+        </p>
       ) : null}
       {message ? <p className="admin-hint">{message}</p> : null}
       {error ? <p className="admin-hint admin-hint--error">{error}</p> : null}
