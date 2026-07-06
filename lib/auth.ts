@@ -3,9 +3,31 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const ADMIN_COOKIE = "our_lady_admin_session";
-const ADMIN_USERNAME = process.env.ADMIN_USERNAME ?? "admin@ourlady.local";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "lourdes-admin";
-const ADMIN_SECRET = process.env.ADMIN_SECRET ?? "our-lady-of-lourdes-secret";
+const allowDevelopmentFallback = process.env.NODE_ENV !== "production";
+const ADMIN_USERNAME =
+  process.env.ADMIN_USERNAME?.trim() ||
+  (allowDevelopmentFallback ? "admin@ourlady.local" : "");
+const ADMIN_PASSWORD =
+  process.env.ADMIN_PASSWORD?.trim() ||
+  (allowDevelopmentFallback ? "lourdes-admin" : "");
+const ADMIN_SECRET =
+  process.env.ADMIN_SECRET?.trim() ||
+  (allowDevelopmentFallback ? "our-lady-of-lourdes-secret" : "");
+
+function safeEqual(left: string, right: string) {
+  const leftBuffer = Buffer.from(left);
+  const rightBuffer = Buffer.from(right);
+
+  if (leftBuffer.length !== rightBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(leftBuffer, rightBuffer);
+}
+
+export function isAdminConfigured() {
+  return Boolean(ADMIN_USERNAME && ADMIN_PASSWORD && ADMIN_SECRET);
+}
 
 function createSessionValue() {
   return crypto
@@ -14,15 +36,12 @@ function createSessionValue() {
     .digest("hex");
 }
 
-export function getAdminDefaults() {
-  return {
-    username: ADMIN_USERNAME,
-    password: ADMIN_PASSWORD
-  };
-}
-
 export async function verifyAdminCredentials(username: string, password: string) {
-  return username === ADMIN_USERNAME && password === ADMIN_PASSWORD;
+  if (!isAdminConfigured()) {
+    return false;
+  }
+
+  return safeEqual(username, ADMIN_USERNAME) && safeEqual(password, ADMIN_PASSWORD);
 }
 
 export async function setAdminSession() {

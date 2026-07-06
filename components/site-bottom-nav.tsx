@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BookIcon,
   ClockIcon,
   CrossIcon,
   HomeIcon,
@@ -13,6 +14,7 @@ import {
 const bottomLinks = [
   { href: "/", label: "Home", icon: HomeIcon },
   { href: "/mass-schedule", label: "Mass", icon: ClockIcon },
+  { href: "/daily-readings", label: "Readings", icon: BookIcon },
   { href: "/news", label: "News", icon: SparkIcon },
   { href: "/prayers", label: "Prayers", icon: CrossIcon },
   { href: "/associations", label: "Groups", icon: UsersIcon }

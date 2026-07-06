@@ -6,6 +6,8 @@ import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
 import { getSiteContent } from "@/lib/content";
 import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
+import { churchPhotos } from "@/lib/site-media";
+import { getSiteUrl, toAbsoluteMediaUrl } from "@/lib/site-url";
 import {
   getActiveSaint,
   getMassEntryForDate,
@@ -16,9 +18,31 @@ import {
 } from "@/lib/site-runtime";
 import { getThemePresetVariableSet } from "@/lib/theme-presets";
 
+const siteUrl = getSiteUrl();
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Our Lady of Lourdes Catholic Church, Maryland, Enugu",
-  description: "Catholic parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu."
+  description: "Catholic parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu.",
+  openGraph: {
+    title: "Our Lady of Lourdes Catholic Church, Maryland, Enugu",
+    description: "Catholic parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu.",
+    url: siteUrl,
+    siteName: "Our Lady of Lourdes Catholic Church",
+    type: "website",
+    images: [
+      {
+        url: toAbsoluteMediaUrl(churchPhotos.frontExterior.src),
+        alt: churchPhotos.frontExterior.alt
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Our Lady of Lourdes Catholic Church, Maryland, Enugu",
+    description: "Catholic parish website for Our Lady of Lourdes Catholic Church, Maryland, Enugu.",
+    images: [toAbsoluteMediaUrl(churchPhotos.frontExterior.src)]
+  }
 };
 
 function buildThemeStyle(preset: Parameters<typeof getThemePresetVariableSet>[0]) {
@@ -62,6 +86,7 @@ export default async function RootLayout({
     getLiturgicalDayInfo(dateKey)
   ]);
   const activeSaint = getActiveSaint(content, dateKey);
+  const automaticSaint = liturgicalDay?.saint;
   const nextMassEntry = getRollingMassWeek(content).find((entry) => entry.item);
   const nextMassDay = nextMassEntry?.item ?? null;
   const nextMassTimes = nextMassDay ? getMassTimes(nextMassDay).slice(0, 2).join(" · ") : "";
@@ -83,8 +108,13 @@ export default async function RootLayout({
               activeSaint
                 ? {
                     name: activeSaint.name,
-                    slug: activeSaint.slug
+                    href: `/saints/${activeSaint.slug}`
                   }
+                : automaticSaint
+                  ? {
+                      name: automaticSaint.name,
+                      href: "/saints"
+                    }
                 : undefined
             }
             associations={content.associations.map((item) => ({

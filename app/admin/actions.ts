@@ -51,6 +51,7 @@ export async function saveSiteContentAction(formData: FormData) {
     [
       "/",
       "/about",
+      "/daily-readings",
       "/mass-schedule",
       "/associations",
       "/saints",

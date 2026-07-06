@@ -161,6 +161,17 @@ export function DocumentIcon({ className }: IconProps) {
   );
 }
 
+export function BookIcon({ className }: IconProps) {
+  return (
+    <IconFrame className={className}>
+      <path d="M5.8 5.6A2.8 2.8 0 0 1 8.6 4h9.1v15.2H8.6a2.8 2.8 0 0 0-2.8 2.8Z" />
+      <path d="M5.8 5.6v13.6A2.8 2.8 0 0 1 8.6 16.4h9.1" />
+      <path d="M9.8 8.1h4.8" />
+      <path d="M9.8 11.4h4.8" />
+    </IconFrame>
+  );
+}
+
 export function HeartIcon({ className }: IconProps) {
   return (
     <IconFrame className={className}>

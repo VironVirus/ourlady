@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { loginAction } from "@/app/admin/actions";
-import { getAdminDefaults, isAdminAuthenticated } from "@/lib/auth";
+import { isAdminAuthenticated, isAdminConfigured } from "@/lib/auth";
 
 type AdminLoginPageProps = {
   searchParams: Promise<{
@@ -18,7 +18,7 @@ export default async function AdminLoginPage({
   }
 
   const params = await searchParams;
-  const defaults = getAdminDefaults();
+  const adminConfigured = isAdminConfigured();
 
   return (
     <div className="page">
@@ -26,31 +26,37 @@ export default async function AdminLoginPage({
         <div className="container admin-login-wrap">
           <div className="admin-login-card">
             <div className="eyebrow">Admin Login</div>
-            <h1>Manage parish website content</h1>
-            <p>Sign in to update parish content, images, notices, and schedules.</p>
+            <h1>Administrator Access</h1>
+            <p>Sign in to manage protected website content.</p>
             {params.error === "invalid" ? (
               <div className="admin-banner admin-banner--error">
-                The login details were not correct. Please try again.
+                Access was not granted. Please try again.
               </div>
             ) : null}
-            <form action={loginAction} className="admin-form">
-              <label className="admin-field">
-                <span>Username</span>
-                <input name="username" defaultValue={defaults.username} />
-              </label>
-              <label className="admin-field">
-                <span>Password</span>
-                <input
-                  name="password"
-                  type="password"
-                  defaultValue={defaults.password}
-                />
-              </label>
-              <button type="submit" className="button button--primary">
-                Sign In
-              </button>
-            </form>
-            <p className="admin-hint">Use the admin details provided for the parish site.</p>
+            {adminConfigured ? (
+              <form action={loginAction} className="admin-form">
+                <label className="admin-field">
+                  <span>Username</span>
+                  <input name="username" autoComplete="username" />
+                </label>
+                <label className="admin-field">
+                  <span>Password</span>
+                  <input
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                  />
+                </label>
+                <button type="submit" className="button button--primary">
+                  Sign In
+                </button>
+              </form>
+            ) : (
+              <div className="admin-banner admin-banner--error">
+                Secure admin credentials have not been configured yet.
+              </div>
+            )}
+            <p className="admin-hint">Administrator access only.</p>
           </div>
         </div>
       </section>

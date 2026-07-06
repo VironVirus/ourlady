@@ -27,6 +27,10 @@ function toSiteDate(dateKey: string) {
   return new Date(Date.UTC(year, (month || 1) - 1, day || 1, 12));
 }
 
+function isSunday(dateKey: string) {
+  return toSiteDate(dateKey).getUTCDay() === 0;
+}
+
 function formatSiteDate(
   dateKey: string,
   options: Intl.DateTimeFormatOptions
@@ -65,10 +69,46 @@ export function getMassEntryForDate(content: SiteContent, dateKey = getSiteDateK
   return getRollingMassWeek(content, dateKey, 1)[0] ?? null;
 }
 
+export function createDefaultMassScheduleItem(dateKey: string): MassScheduleItem {
+  const labels = getMassDateLabel(dateKey);
+  const sunday = isSunday(dateKey);
+  const masses = sunday
+    ? [
+        "6:00 AM · Main Church",
+        "7:15 AM · Parish Hall",
+        "8:00 AM · Main Church",
+        "8:15 AM · Children's Mass",
+        "10:00 AM · Main Church"
+      ]
+    : ["6:00 AM · Main Church", "6:00 PM · Main Church"];
+  const venue = sunday ? "Main Church and Parish Hall" : "Main Church";
+
+  return {
+    id: `default-mass-${dateKey}`,
+    title: sunday ? "Sunday Mass Schedule" : `${labels.weekday} Mass Schedule`,
+    date: dateKey,
+    day: labels.weekday,
+    masses,
+    time: masses[0] || "",
+    venue,
+    detail: venue,
+    note: "",
+    liturgyTitle: "",
+    liturgySeason: "",
+    liturgyColor: "",
+    saintSlug: "",
+    readingQuote: "",
+    readingReference: "",
+    reflectionTheme: ""
+  };
+}
+
 function mergeMassScheduleItems(items: MassScheduleItem[], dateKey: string): MassScheduleItem {
   const [firstItem] = items;
-  const masses = items.flatMap(getMassTimes).filter(Boolean);
-  const venue = items.map(getMassVenue).find(Boolean) || "";
+  const fallback = createDefaultMassScheduleItem(dateKey);
+  const customMasses = items.flatMap(getMassTimes).filter(Boolean);
+  const masses = customMasses.length > 0 ? customMasses : fallback.masses;
+  const venue = items.map(getMassVenue).find(Boolean) || fallback.venue;
   const note = items.map((item) => item.note).find(Boolean) || "";
   const liturgyTitle = items.map((item) => item.liturgyTitle).find(Boolean) || "";
   const liturgySeason = items.map((item) => item.liturgySeason).find(Boolean) || "";
@@ -80,11 +120,13 @@ function mergeMassScheduleItems(items: MassScheduleItem[], dateKey: string): Mas
 
   return {
     ...firstItem,
+    title: items.map((item) => item.title).find(Boolean) || fallback.title,
     date: dateKey,
+    day: firstItem.day || fallback.day,
     masses,
-    time: masses[0] || firstItem.time,
+    time: masses[0] || firstItem.time || fallback.time,
     venue,
-    detail: venue || firstItem.detail,
+    detail: venue || firstItem.detail || fallback.detail,
     note,
     liturgyTitle,
     liturgySeason,
@@ -123,12 +165,14 @@ export function getRollingMassWeek(
 
   return getDateKeyRange(startDateKey, days).map((dateKey) => {
     const items = groupedSchedule.get(dateKey) ?? [];
+    const hasCustomItem = items.length > 0;
 
     return {
       dateKey,
       labels: getMassDateLabel(dateKey),
       isToday: dateKey === startDateKey,
-      item: items.length > 0 ? mergeMassScheduleItems(items, dateKey) : null
+      item: hasCustomItem ? mergeMassScheduleItems(items, dateKey) : createDefaultMassScheduleItem(dateKey),
+      source: hasCustomItem ? "custom" : "default"
     };
   });
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageIntro } from "@/components/page-intro";
 import { CrossIcon } from "@/components/site-icons";
@@ -58,7 +59,35 @@ export default async function SaintPage({ params }: SaintPageProps) {
                 Saint Story
               </span>
               <h2>Prayer and reflection</h2>
-              <p>Saint stories can be scheduled from the admin area and featured on the homepage when their day arrives.</p>
+              <p>{item.excerpt || "Read the saint's witness slowly and let it lead you into prayer."}</p>
+            </div>
+
+            <div className="panel panel--soft-stack">
+              <span className="section-badge">
+                <CrossIcon className="icon" />
+                Feast Day
+              </span>
+              <h2>{item.feastDay || item.name}</h2>
+              <p>{item.title || "Saint of the Church"}</p>
+              <div className="today-panel__actions">
+                <Link href="/daily-readings" className="text-link">
+                  Open daily readings
+                </Link>
+                <Link href="/prayers" className="text-link">
+                  Open prayers
+                </Link>
+              </div>
+            </div>
+
+            <div className="panel panel--soft-stack">
+              <span className="section-badge">
+                <CrossIcon className="icon" />
+                CYON Focus
+              </span>
+              <h2>Live the witness</h2>
+              <p>
+                Share this saint story with the youth and use it as a reflection point for service, purity, courage, charity, and faithfulness.
+              </p>
             </div>
           </aside>
         </div>

@@ -4,8 +4,8 @@ import { HomeNewsShowcase } from "@/components/home-news-showcase";
 import {
   ClockIcon,
   CrossIcon,
-  SparkIcon,
-  UsersIcon
+  DocumentIcon,
+  SparkIcon
 } from "@/components/site-icons";
 import { getSiteContent } from "@/lib/content";
 import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
@@ -46,13 +46,19 @@ export default async function HomePage() {
   const focusEntry = todayEntry?.item ? todayEntry : nextUpcomingEntry;
   const focusItem = focusEntry?.item ?? null;
   const massTimes = focusItem ? getMassTimes(focusItem) : [];
-  const celebration = focusItem?.liturgyTitle || liturgicalDay?.title || "";
-  const season = focusItem?.liturgySeason || liturgicalDay?.season || "";
-  const liturgicalColor = focusItem?.liturgyColor || liturgicalDay?.color || "";
+  const isTodayMassEntry = Boolean(focusEntry?.isToday);
+  const celebration =
+    (isTodayMassEntry ? focusItem?.liturgyTitle : "") || liturgicalDay?.title || focusItem?.liturgyTitle || "";
+  const season =
+    (isTodayMassEntry ? focusItem?.liturgySeason : "") || liturgicalDay?.season || focusItem?.liturgySeason || "";
+  const liturgicalColor =
+    (isTodayMassEntry ? focusItem?.liturgyColor : "") || liturgicalDay?.color || focusItem?.liturgyColor || "";
   const focusSaint =
     (focusItem?.saintSlug
       ? content.saints.find((item) => item.slug === focusItem.saintSlug && item.published)
       : null) ?? activeSaint;
+  const automaticSaint = !focusSaint && liturgicalDay?.saint ? liturgicalDay.saint : null;
+  const dailyReadings = liturgicalDay?.readings ?? null;
   const quickLinks = [
     {
       href: "/mass-schedule",
@@ -69,18 +75,18 @@ export default async function HomePage() {
       photo: churchPhotos.processionStreet
     },
     {
+      href: "/daily-readings",
+      label: "Daily Readings",
+      meta: "Readings and saint today",
+      icon: DocumentIcon,
+      photo: churchPhotos.altarInterior
+    },
+    {
       href: "/prayers",
       label: "Prayers",
       meta: "Open prayer write-ups",
       icon: CrossIcon,
       photo: churchPhotos.frontExterior
-    },
-    {
-      href: "/associations",
-      label: "Associations",
-      meta: "CYON, CMO, CWO, servers",
-      icon: UsersIcon,
-      photo: churchPhotos.processionCourtyard
     }
   ];
 
@@ -88,7 +94,7 @@ export default async function HomePage() {
     <div className="page">
       <HeroSlideshow slides={heroSlides}>
         <div className="hero__panel">
-          <div className="eyebrow eyebrow--light">Catholic Parish</div>
+          <div className="eyebrow eyebrow--light">Catholic Parish and CYON</div>
           <h1>Our Lady of Lourdes Catholic Church</h1>
           <p className="hero__meta">Maryland, Enugu</p>
           <p className="hero__lead hero__lead--light">
@@ -153,6 +159,31 @@ export default async function HomePage() {
                     ) : null}
                   </blockquote>
                 ) : null}
+
+                {dailyReadings ? (
+                  <div className="today-panel__readings">
+                    <div className="today-panel__readings-head">
+                      <span>Daily Readings</span>
+                      {dailyReadings.lectionary ? <strong>Lectionary {dailyReadings.lectionary}</strong> : null}
+                    </div>
+                    <div className="today-panel__reading-list">
+                      {dailyReadings.references.map((reading) => (
+                        <div key={`${reading.label}-${reading.citation}`} className="today-panel__reading">
+                          <span>{reading.label}</span>
+                          <strong>{reading.citation}</strong>
+                        </div>
+                      ))}
+                    </div>
+                    <a
+                      href={dailyReadings.sourceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-link"
+                    >
+                      Open full readings
+                    </a>
+                  </div>
+                ) : null}
               </div>
 
               <div className="today-panel__side">
@@ -161,6 +192,18 @@ export default async function HomePage() {
                     <span>Saint of the Day</span>
                     <strong>{focusSaint.name}</strong>
                   </Link>
+                ) : automaticSaint ? (
+                  <Link href="/saints" className="today-panel__saint">
+                    <span>Saint of the Day</span>
+                    <strong>{automaticSaint.name}</strong>
+                  </Link>
+                ) : null}
+
+                {liturgicalColor ? (
+                  <div className="today-panel__detail">
+                    <span>Color of the Day</span>
+                    <strong>{sentenceCase(liturgicalColor)}</strong>
+                  </div>
                 ) : null}
 
                 {focusItem?.reflectionTheme ? (
@@ -182,6 +225,9 @@ export default async function HomePage() {
                 ) : null}
 
                 <div className="today-panel__actions">
+                  <Link href="/daily-readings" className="button button--secondary">
+                    Daily Readings
+                  </Link>
                   <Link href="/prayers" className="button button--secondary">
                     Open Prayers
                   </Link>

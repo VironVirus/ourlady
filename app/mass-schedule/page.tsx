@@ -59,6 +59,7 @@ export default async function MassSchedulePage() {
               (item?.saintSlug ? saintsBySlug.get(item.saintSlug) : null) ??
               saintsByDate.get(entry.dateKey) ??
               null;
+            const automaticSaint = !saint && liturgicalDay?.saint ? liturgicalDay.saint : null;
             const celebration = item?.liturgyTitle || liturgicalDay?.title || "";
             const season = item?.liturgySeason || liturgicalDay?.season || "";
             const liturgicalColor = item?.liturgyColor || liturgicalDay?.color || "";
@@ -102,6 +103,11 @@ export default async function MassSchedulePage() {
                     <CrossIcon className="icon icon--tiny" />
                     Saint of the day: {saint.name}
                   </Link>
+                ) : automaticSaint ? (
+                  <Link href="/saints" className="mass-day-card__saint">
+                    <CrossIcon className="icon icon--tiny" />
+                    Saint of the day: {automaticSaint.name}
+                  </Link>
                 ) : null}
 
                 {item ? (
@@ -115,7 +121,11 @@ export default async function MassSchedulePage() {
                         <li key={`${entry.dateKey}-${massTime}`}>{massTime}</li>
                       ))}
                     </ul>
-                    {item.note ? <p className="mass-day-card__note">{item.note}</p> : null}
+                    {item.note ? (
+                      <p className="mass-day-card__note">{item.note}</p>
+                    ) : entry.source === "default" ? (
+                      <p className="mass-day-card__note">Regular parish Mass schedule.</p>
+                    ) : null}
                   </>
                 ) : (
                   <div className="mass-day-card__empty">

@@ -3171,6 +3171,10 @@ html[data-appearance="dark"] .admin-link--danger {
   min-width: 9rem;
 }
 
+.today-panel__time .icon {
+  color: var(--brand);
+}
+
 .today-panel__time strong,
 .today-panel__detail strong,
 .today-panel__saint strong {
@@ -3212,6 +3216,145 @@ html[data-appearance="dark"] .admin-link--danger {
   margin-top: 0.7rem;
   color: var(--muted);
   font-weight: 700;
+}
+
+.today-panel__readings {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.1rem 1.15rem;
+  border: 1px solid rgba(65, 45, 24, 0.08);
+  border-radius: 1.2rem;
+  background: color-mix(in srgb, var(--background) 72%, white);
+}
+
+.today-panel__readings-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.today-panel__readings-head span {
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.today-panel__readings-head strong,
+.today-panel__reading strong {
+  color: var(--brand-deep);
+}
+
+.today-panel__readings h2,
+.story-article__main h2 {
+  color: var(--brand-deep);
+}
+
+.today-panel__reading-list {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.today-panel__reading {
+  display: grid;
+  gap: 0.18rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 1px solid rgba(65, 45, 24, 0.08);
+}
+
+.today-panel__reading:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.today-panel__reading span {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.daily-devotion-card {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1.2rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 10%, transparent);
+  border-radius: 1.3rem;
+  background:
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-strong) 84%, white),
+      color-mix(in srgb, var(--background-soft) 70%, var(--brand-soft) 30%)
+    );
+  box-shadow: 0 20px 48px color-mix(in srgb, var(--brand-deep) 8%, transparent);
+}
+
+.daily-devotion-card__body {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.daily-devotion-card__body p,
+.daily-devotion-card small {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.daily-devotion-card--acclamation {
+  gap: 0.55rem;
+  text-align: center;
+  background:
+    radial-gradient(
+      circle at top center,
+      color-mix(in srgb, var(--brand-soft) 20%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, var(--surface-strong) 86%, white),
+      color-mix(in srgb, var(--background-soft) 72%, var(--brand-soft) 28%)
+    );
+}
+
+.daily-devotion-card__acclamation-label {
+  margin: 0;
+  color: var(--brand);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.daily-devotion-card__acclamation-text {
+  margin: 0;
+  color: var(--brand-deep);
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+  line-height: 1.55;
+}
+
+.daily-reflection-note {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1rem 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 10%, transparent);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--surface-strong) 82%, var(--background-soft) 18%);
+}
+
+.daily-reflection-note span {
+  color: var(--brand);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.daily-reflection-note strong {
+  color: var(--brand-deep);
+  line-height: 1.6;
 }
 
 .today-panel__note {
@@ -3583,6 +3726,10 @@ html[data-appearance="dark"] .empty-state {
   .news-list-card__footer,
   .home-news-showcase__footer {
     gap: 0.9rem;
+  }
+
+  .today-panel__times {
+    flex-direction: column;
   }
 
   .home-news-showcase__image {

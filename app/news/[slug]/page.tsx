@@ -7,6 +7,7 @@ import { PageIntro } from "@/components/page-intro";
 import { SparkIcon } from "@/components/site-icons";
 import { getNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { getNewsPostBySlug, getPublishedNewsPosts } from "@/lib/news";
+import { toAbsoluteMediaUrl, toAbsoluteSiteUrl } from "@/lib/site-url";
 
 type NewsStoryPageProps = {
   params: Promise<{
@@ -33,9 +34,37 @@ export async function generateMetadata({
     };
   }
 
+  const description = item.excerpt || item.description;
+  const primaryImage = toAbsoluteMediaUrl(getPrimaryNewsImage(item));
+  const storyUrl = toAbsoluteSiteUrl(`/news/${item.slug}`);
+
   return {
     title: `${item.title} | Our Lady of Lourdes Catholic Church`,
-    description: item.excerpt || item.description
+    description,
+    alternates: {
+      canonical: storyUrl
+    },
+    openGraph: {
+      title: item.title,
+      description,
+      url: storyUrl,
+      siteName: "Our Lady of Lourdes Catholic Church",
+      type: "article",
+      images: primaryImage
+        ? [
+            {
+              url: primaryImage,
+              alt: item.title
+            }
+          ]
+        : undefined
+    },
+    twitter: {
+      card: primaryImage ? "summary_large_image" : "summary",
+      title: item.title,
+      description,
+      images: primaryImage ? [primaryImage] : undefined
+    }
   };
 }
 

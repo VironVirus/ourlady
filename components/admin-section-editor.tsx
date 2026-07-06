@@ -5,6 +5,7 @@ import { saveSiteContentAction } from "@/app/admin/actions";
 import { AdminImageUpload } from "@/components/admin-image-upload";
 import { newsCategoryOptions } from "@/lib/news-categories";
 import {
+  createDefaultMassScheduleItem,
   getDateKeyRange,
   getMassDateLabel,
   getSiteDateKey
@@ -585,16 +586,17 @@ export function AdminSectionEditor({
 
               return itemDay === labels.weekday;
             }) ?? sortedItems.at(-1);
+        const fallback = createDefaultMassScheduleItem(dateKey);
 
         return {
           id: `mass-${dateKey}-${Date.now()}-${index}`,
-          title: template?.title || `${labels.weekday} Mass`,
+          title: template?.title || fallback.title,
           date: dateKey,
           day: labels.weekday,
-          masses: template?.masses.length ? [...template.masses] : [],
-          time: template?.masses[0] || template?.time || "",
-          venue: template?.venue || template?.detail || "Main Church",
-          detail: template?.venue || template?.detail || "Main Church",
+          masses: template?.masses.length ? [...template.masses] : [...fallback.masses],
+          time: template?.masses[0] || template?.time || fallback.time,
+          venue: template?.venue || template?.detail || fallback.venue,
+          detail: template?.venue || template?.detail || fallback.detail,
           note: "",
           liturgyTitle: "",
           liturgySeason: "",
@@ -1175,7 +1177,9 @@ export function AdminSectionEditor({
           <div className="admin-subsection__head">
             <div>
               <h3>Weekly Timing Note</h3>
-              <p className="admin-hint">Use this to announce changes for the current week.</p>
+              <p className="admin-hint">
+                If no custom day is added, the website uses the regular parish Mass timetable automatically.
+              </p>
             </div>
           </div>
           <label className="admin-field">
@@ -1192,7 +1196,9 @@ export function AdminSectionEditor({
           <div className="admin-subsection__head">
             <div>
               <h3>Add Schedule Day</h3>
-              <p className="admin-hint">Add one day, or generate the next full week instantly.</p>
+              <p className="admin-hint">
+                Weekdays default to 6:00 AM and 6:00 PM. Sundays use the parish Sunday timetable unless you override it here.
+              </p>
             </div>
             <div className="admin-inline-actions">
               <button

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 import {
+  BookIcon,
   ChevronDownIcon,
   CloseIcon,
   CrossIcon,
@@ -21,7 +22,7 @@ import {
 type SiteHeaderProps = {
   activeSaint?: {
     name: string;
-    slug: string;
+    href?: string;
   };
   associations: Array<{
     slug: string;
@@ -66,6 +67,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
     {
       label: "Resources",
       items: [
+        { href: "/daily-readings", label: "Daily Readings", icon: BookIcon },
         { href: "/announcements", label: "Announcements", icon: MegaphoneIcon },
         { href: "/prayers", label: "Prayers", icon: CrossIcon },
         { href: "/documents", label: "Bulletins", icon: DocumentIcon },
@@ -138,10 +140,17 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
 
         <div className="site-header__controls">
           {showActiveSaint ? (
-            <Link href={`/saints/${activeSaint.slug}`} className="site-saint-pill">
-              <span>Saint Today</span>
-              <strong>{activeSaint.name}</strong>
-            </Link>
+            activeSaint.href ? (
+              <Link href={activeSaint.href} className="site-saint-pill">
+                <span>Saint Today</span>
+                <strong>{activeSaint.name}</strong>
+              </Link>
+            ) : (
+              <div className="site-saint-pill">
+                <span>Saint Today</span>
+                <strong>{activeSaint.name}</strong>
+              </div>
+            )
           ) : null}
 
           <nav className="site-nav site-nav--desktop" aria-label="Primary navigation">
@@ -228,14 +237,21 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
           <div className="container">
             <div className="site-mobile-menu__inner">
               {showActiveSaint ? (
-                <Link
-                  href={`/saints/${activeSaint.slug}`}
-                  className="site-mobile-menu__saint"
-                  onClick={closeMenus}
-                >
-                  <span>Saint Today</span>
-                  <strong>{activeSaint.name}</strong>
-                </Link>
+                activeSaint.href ? (
+                  <Link
+                    href={activeSaint.href}
+                    className="site-mobile-menu__saint"
+                    onClick={closeMenus}
+                  >
+                    <span>Saint Today</span>
+                    <strong>{activeSaint.name}</strong>
+                  </Link>
+                ) : (
+                  <div className="site-mobile-menu__saint">
+                    <span>Saint Today</span>
+                    <strong>{activeSaint.name}</strong>
+                  </div>
+                )
               ) : null}
 
               <div className="site-mobile-menu__top">
