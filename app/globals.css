@@ -112,6 +112,7 @@ html {
 
 body {
   margin: 0;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top, color-mix(in srgb, var(--brand-soft) 34%, transparent), transparent 30%),
     linear-gradient(
@@ -151,16 +152,16 @@ a:hover {
 }
 
 .container {
-  width: min(calc(100% - 2rem), var(--container));
+  width: min(calc(100% - 1.5rem), var(--container));
   margin: 0 auto;
 }
 
 .page {
-  padding-bottom: 4rem;
+  padding-bottom: 3rem;
 }
 
 .section {
-  padding: 4rem 0;
+  padding: 3.2rem 0;
 }
 
 .section--soft {
@@ -189,10 +190,10 @@ a:hover {
 
 .section__heading {
   display: flex;
-  gap: 2rem;
+  gap: 1.2rem;
   justify-content: space-between;
   align-items: end;
-  margin-bottom: 2rem;
+  margin-bottom: 1.4rem;
 }
 
 .section__heading h2,
@@ -256,20 +257,20 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.8rem 0;
+  padding: 0.72rem 0;
 }
 
 .brand-mark {
   display: inline-flex;
   align-items: center;
-  gap: 0.875rem;
+  gap: 0.7rem;
 }
 
 .brand-mark__seal {
   display: grid;
   place-items: center;
-  width: 3rem;
-  height: 3rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 999px;
   background: linear-gradient(145deg, var(--brand), var(--brand-deep));
   color: #fff9ef;
@@ -294,15 +295,15 @@ a:hover {
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.84rem;
+  gap: 0.35rem;
+  font-size: 0.8rem;
 }
 
 .site-nav__cluster {
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.24rem;
+  gap: 0.3rem;
+  padding: 0.2rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--background) 50%, white);
@@ -352,8 +353,8 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  min-height: 2.45rem;
-  padding: 0.48rem 0.72rem;
+  min-height: 2.2rem;
+  padding: 0.42rem 0.62rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
   border-radius: 999px;
   background: color-mix(in srgb, var(--background) 56%, white);
@@ -392,8 +393,8 @@ a:hover {
   position: absolute;
   top: calc(100% + 0.5rem);
   left: 0;
-  min-width: 14rem;
-  padding: 0.55rem;
+  min-width: 12rem;
+  padding: 0.45rem;
   display: grid;
   gap: 0.35rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
@@ -445,11 +446,11 @@ a:hover {
 }
 
 .site-mobile-menu__inner {
-  padding: 0.9rem;
+  padding: 0.72rem;
   display: grid;
-  gap: 0.85rem;
+  gap: 0.72rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
-  border-radius: 1.4rem;
+  border-radius: 1.25rem;
   background: color-mix(in srgb, var(--background) 84%, white);
   backdrop-filter: blur(18px);
   box-shadow: 0 24px 60px rgba(38, 25, 12, 0.12);
@@ -458,7 +459,7 @@ a:hover {
 .site-mobile-menu .site-mobile-menu__saint {
   display: grid;
   gap: 0.25rem;
-  padding: 0.8rem 0.9rem;
+  padding: 0.7rem 0.8rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
   border-radius: 1.15rem;
   background: color-mix(in srgb, var(--background) 68%, white);
@@ -468,7 +469,7 @@ a:hover {
 .site-mobile-menu__links {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
 .site-mobile-dropdown {
@@ -484,7 +485,7 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   gap: 0.8rem;
-  padding: 0.82rem 0.95rem;
+  padding: 0.7rem 0.82rem;
   border: none;
   background: transparent;
   color: var(--brand-deep);
@@ -510,7 +511,7 @@ a:hover {
 }
 
 .site-mobile-dropdown__content {
-  padding: 0.75rem 0.9rem 0.9rem;
+  padding: 0.55rem 0.72rem 0.72rem;
 }
 
 .site-mobile-menu a {
@@ -518,8 +519,8 @@ a:hover {
   align-items: center;
   justify-content: flex-start;
   gap: 0.45rem;
-  min-height: 2.8rem;
-  padding: 0.62rem 0.78rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.7rem;
   border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
   border-radius: 1rem;
   background: color-mix(in srgb, var(--background) 64%, white);
@@ -559,8 +560,8 @@ a:hover {
   align-items: center;
   justify-content: center;
   gap: 0.28rem;
-  min-height: 2.1rem;
-  padding: 0.38rem 0.58rem;
+  min-height: 2rem;
+  padding: 0.32rem 0.5rem;
   border: none;
   border-radius: 999px;
   background: transparent;
@@ -1213,16 +1214,16 @@ html[data-appearance="dark"] .admin-link--danger {
 .hero__actions {
   display: flex;
   justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 0.75rem;
+  margin-top: 1.45rem;
 }
 
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3.2rem;
-  padding: 0.85rem 1.4rem;
+  min-height: 3rem;
+  padding: 0.72rem 1.15rem;
   border-radius: 999px;
   border: 1px solid transparent;
   font-weight: 700;
@@ -1290,7 +1291,7 @@ html[data-appearance="dark"] .admin-link--danger {
 }
 
 .feature-card {
-  padding: 1.75rem;
+  padding: 1.55rem;
   border-radius: var(--radius-lg);
 }
 
@@ -1316,11 +1317,11 @@ html[data-appearance="dark"] .admin-link--danger {
 .split-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.5rem;
+  gap: 1.2rem;
 }
 
 .panel {
-  padding: 2rem;
+  padding: 1.7rem;
   border-radius: var(--radius-xl);
 }
 
@@ -1367,8 +1368,8 @@ html[data-appearance="dark"] .admin-link--danger {
 .story-card {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1.7rem;
+  gap: 0.85rem;
+  padding: 1.45rem;
   border-radius: var(--radius-lg);
 }
 
@@ -1424,8 +1425,8 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .association-card__content {
   display: grid;
-  gap: 0.9rem;
-  padding: 1.6rem;
+  gap: 0.75rem;
+  padding: 1.35rem;
   height: 100%;
   align-content: end;
 }
@@ -1670,6 +1671,7 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .news-list-card,
 .home-news-showcase {
+  min-width: 0;
   border: 1px solid var(--line);
   background: var(--surface);
   backdrop-filter: blur(16px);
@@ -1717,6 +1719,9 @@ html[data-appearance="dark"] .admin-link--danger {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+  flex-wrap: wrap;
 }
 
 .news-list-card p {
@@ -1813,12 +1818,15 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .home-news-grid {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.2rem;
 }
 
 .home-news-showcase {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.88rem;
+  width: 100%;
   padding: 1.1rem;
   border-radius: 1.7rem;
 }
@@ -1829,6 +1837,7 @@ html[data-appearance="dark"] .admin-link--danger {
   justify-content: space-between;
   gap: 0.8rem;
   align-items: center;
+  min-width: 0;
 }
 
 .home-news-showcase__controls {
@@ -1847,6 +1856,7 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .home-news-showcase h3 {
   margin: 0;
+  max-width: 100%;
   font-family: var(--serif);
   font-size: clamp(1.3rem, 2vw, 1.8rem);
   color: var(--brand-deep);
@@ -1854,6 +1864,7 @@ html[data-appearance="dark"] .admin-link--danger {
 }
 
 .home-news-showcase__image {
+  width: 100%;
   aspect-ratio: 16 / 5.5;
   min-height: 9.25rem;
   border-radius: 1.25rem;
@@ -1875,6 +1886,7 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .home-news-showcase p {
   margin: 0;
+  max-width: 100%;
   color: var(--muted);
   font-size: 0.98rem;
   line-height: 1.64;
@@ -1983,7 +1995,7 @@ html[data-appearance="dark"] .admin-link--danger {
 }
 
 .page-intro {
-  padding: 4rem 0 1rem;
+  padding: 3rem 0 0.8rem;
 }
 
 .page-intro__inner {
@@ -2919,14 +2931,14 @@ html[data-appearance="dark"] .admin-link--danger {
 .hero--immersive .hero__content {
   display: flex;
   align-items: flex-end;
-  min-height: 90vh;
-  padding: 7rem 0 4rem;
+  min-height: 84vh;
+  padding: 6rem 0 3rem;
   text-align: left;
 }
 
 .hero__panel {
-  width: min(100%, 40rem);
-  padding: 2rem;
+  width: min(100%, 37rem);
+  padding: 1.65rem;
   border: 1px solid rgba(255, 247, 234, 0.18);
   border-radius: 2rem;
   background: rgba(23, 16, 11, 0.34);
@@ -2993,8 +3005,8 @@ html[data-appearance="dark"] .admin-link--danger {
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  min-height: 13rem;
-  padding: 1.4rem;
+  min-height: 11.5rem;
+  padding: 1.2rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -3117,8 +3129,8 @@ html[data-appearance="dark"] .admin-link--danger {
 
 .today-panel {
   display: grid;
-  gap: 1.4rem;
-  padding: 2rem;
+  gap: 1.1rem;
+  padding: 1.65rem;
 }
 
 .today-panel__head {
@@ -3140,7 +3152,7 @@ html[data-appearance="dark"] .admin-link--danger {
 .today-panel__grid {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(18rem, 0.85fr);
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .today-panel__main,
@@ -3620,7 +3632,7 @@ html[data-appearance="dark"] .empty-state {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    padding: 0.85rem 0;
+    padding: 0.72rem 0;
   }
 
   .site-header__controls {
@@ -3687,7 +3699,7 @@ html[data-appearance="dark"] .empty-state {
 
   .hero--immersive .hero__content {
     align-items: flex-end;
-    min-height: 82vh;
+    min-height: 78vh;
   }
 
   .hero__panel {
@@ -3695,7 +3707,8 @@ html[data-appearance="dark"] .empty-state {
   }
 
   .button {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
   }
 
   .news-card__meta {
@@ -3762,16 +3775,16 @@ html[data-appearance="dark"] .empty-state {
   .site-bottom-nav {
     position: fixed;
     left: 50%;
-    bottom: 1rem;
+    bottom: 0.7rem;
     z-index: 35;
     transform: translateX(-50%);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.25rem;
-    width: min(calc(100% - 1rem), 30rem);
-    padding: 0.45rem;
+    gap: 0.14rem;
+    width: min(calc(100% - 0.8rem), 23rem);
+    padding: 0.3rem;
     border: 1px solid color-mix(in srgb, var(--brand-deep) 12%, transparent);
-    border-radius: 1.3rem;
+    border-radius: 1.1rem;
     background: color-mix(in srgb, var(--background) 82%, white);
     backdrop-filter: blur(18px);
     box-shadow: 0 20px 50px rgba(38, 25, 12, 0.16);
@@ -3780,12 +3793,12 @@ html[data-appearance="dark"] .empty-state {
   .site-bottom-nav a {
     display: grid;
     justify-items: center;
-    gap: 0.3rem;
-    min-height: 3.2rem;
-    padding: 0.5rem 0.25rem;
-    border-radius: 1rem;
+    gap: 0.2rem;
+    min-height: 2.8rem;
+    padding: 0.42rem 0.1rem;
+    border-radius: 0.9rem;
     color: var(--muted);
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     font-weight: 700;
   }
 
@@ -3795,13 +3808,13 @@ html[data-appearance="dark"] .empty-state {
   }
 
   .page {
-    padding-bottom: 7rem;
+    padding-bottom: 6rem;
   }
 }
 
 @media (max-width: 640px) {
   .hero {
-    padding-top: 3.5rem;
+    padding-top: 3rem;
   }
 
   .hero h1 {
@@ -3809,13 +3822,13 @@ html[data-appearance="dark"] .empty-state {
   }
 
   .hero--immersive .hero__content {
-    min-height: 76vh;
-    padding: 6rem 0 2rem;
+    min-height: 72vh;
+    padding: 5.5rem 0 1.7rem;
   }
 
   .hero__panel {
-    padding: 1.4rem;
-    border-radius: 1.5rem;
+    padding: 1.15rem;
+    border-radius: 1.25rem;
   }
 
   .site-header__inner {
@@ -3827,11 +3840,11 @@ html[data-appearance="dark"] .empty-state {
   }
 
   .brand-mark__text strong {
-    font-size: 0.9rem;
+    font-size: 0.82rem;
   }
 
   .brand-mark__text small {
-    font-size: 0.82rem;
+    font-size: 0.74rem;
   }
 
   .quick-link-grid {
@@ -3846,9 +3859,12 @@ html[data-appearance="dark"] .empty-state {
   .association-strip,
   .news-preview-grid,
   .news-browser__grid,
-  .site-mobile-menu__top,
   .site-mobile-menu__links {
     grid-template-columns: 1fr;
+  }
+
+  .site-mobile-menu__top {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .news-pagination,
@@ -3885,11 +3901,11 @@ html[data-appearance="dark"] .empty-state {
   .admin-section,
   .admin-card,
   .admin-submit {
-    padding: 1.4rem;
+    padding: 1.15rem;
   }
 
   .container {
-    width: min(calc(100% - 1.2rem), var(--container));
+    width: min(calc(100% - 0.9rem), var(--container));
   }
 
   .admin-record-row,
@@ -3907,13 +3923,18 @@ html[data-appearance="dark"] .empty-state {
   }
 
   .site-bottom-nav {
-    width: min(calc(100% - 0.6rem), 100%);
-    bottom: 0.6rem;
-    padding: 0.35rem;
-    gap: 0.18rem;
+    width: min(calc(100% - 0.35rem), 21rem);
+    bottom: 0.35rem;
+    padding: 0.22rem;
+    gap: 0.08rem;
+  }
+
+  .site-bottom-nav a {
+    min-height: 2.65rem;
+    padding: 0.34rem 0.06rem;
   }
 
   .site-bottom-nav a span {
-    font-size: 0.68rem;
+    font-size: 0.62rem;
   }
 }

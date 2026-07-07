@@ -2,59 +2,45 @@ import Link from "next/link";
 import { PageIntro } from "@/components/page-intro";
 import { UsersIcon } from "@/components/site-icons";
 import { getSiteContent } from "@/lib/content";
-import { churchPhotos, photoBackground } from "@/lib/site-media";
+import { churchPhotos } from "@/lib/site-media";
 
 export default async function AssociationsPage() {
   const content = await getSiteContent();
+  const cyon =
+    content.associations.find((item) => item.slug === "cyon") ??
+    content.associations[0] ??
+    null;
 
   return (
     <div className="page">
       <PageIntro
-        eyebrow="Associations"
-        title="Parish Associations"
-        description="Connect directly with the associations and groups that shape parish life."
+        eyebrow="Groups"
+        title="Groups"
+        description="Associations and societies will be added soon, please stay tuned."
         image={churchPhotos.processionCourtyard.src}
         position={churchPhotos.processionCourtyard.position}
       />
       <section className="section">
-        <div className="container association-grid">
-          {content.associations.map((item, index) => (
-            <article
-              key={item.slug}
-              className={`association-card${item.image ? " association-card--photo" : ""}`}
-              style={
-                item.image
-                  ? {
-                      backgroundImage: `linear-gradient(180deg, rgba(17, 12, 9, 0.16), rgba(17, 12, 9, 0.72)), url(${item.image})`,
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
-                      backgroundSize: "cover"
-                    }
-                  : index === 0
-                    ? photoBackground(churchPhotos.processionCourtyard)
-                    : undefined
-              }
-            >
-              <div className={item.image || index === 0 ? "association-card__content association-card__content--light" : "association-card__content"}>
-                <span className={item.image || index === 0 ? "section-badge section-badge--light" : "section-badge"}>
-                  <UsersIcon className="icon" />
-                  {item.shortName}
-                </span>
-                <h2>{item.name}</h2>
-                <p>{item.description}</p>
-                <div className={item.image || index === 0 ? "story-card__meta story-card__meta--light" : "story-card__meta"}>
-                  <span>{item.lead}</span>
-                  <span>{item.meeting}</span>
-                </div>
-                <Link
-                  href={`/associations/${item.slug}`}
-                  className={item.image || index === 0 ? "button button--ghost" : "text-link"}
-                >
-                  Open association
-                </Link>
+        <div className="container">
+          <article className="panel panel--soft-stack">
+            <span className="section-badge">
+              <UsersIcon className="icon" />
+              CYON
+            </span>
+            <h2>Associations and societies will be added soon, please stay tuned.</h2>
+            <p>The website is focused on CYON for now so the youth community stays simple and clear.</p>
+            {cyon ? (
+              <div className="story-card__meta">
+                <span>{cyon.shortName}</span>
+                <span>{cyon.meeting}</span>
               </div>
-            </article>
-          ))}
+            ) : null}
+            {cyon ? (
+              <Link href={`/associations/${cyon.slug}`} className="button button--secondary">
+                Visit CYON
+              </Link>
+            ) : null}
+          </article>
         </div>
       </section>
     </div>

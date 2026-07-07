@@ -22,7 +22,7 @@ export default async function AssociationPage({ params }: AssociationPageProps) 
   return (
     <div className="page">
       <PageIntro
-        eyebrow="Association"
+        eyebrow="CYON"
         title={item.name}
         description={item.description}
         image={item.image || churchPhotos.processionCourtyard.src}
@@ -47,6 +47,7 @@ export default async function AssociationPage({ params }: AssociationPageProps) 
                 </span>
               ))}
             </div>
+            <p>Other associations and societies will be added later. For now, CYON is the active group on the website.</p>
           </article>
         </div>
       </section>

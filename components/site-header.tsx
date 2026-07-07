@@ -37,6 +37,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openDesktopGroup, setOpenDesktopGroup] = useState<string | null>(null);
   const [openMobileGroup, setOpenMobileGroup] = useState<string | null>(null);
+  const cyonItem = associations[0];
   const primaryLinks = [
     { href: "/", label: "Home", icon: HomeIcon },
     { href: "/mass-schedule", label: "Mass", icon: CrossIcon },
@@ -54,14 +55,14 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
       ]
     },
     {
-      label: "Associations",
+      label: "Groups",
+      href: "/associations",
       items: [
-        { href: "/associations", label: "Overview", icon: UsersIcon },
-        ...associations.map((item) => ({
-          href: `/associations/${item.slug}`,
-          label: item.shortName || item.name,
+        {
+          href: cyonItem ? `/associations/${cyonItem.slug}` : "/associations",
+          label: cyonItem?.shortName || "CYON",
           icon: UsersIcon
-        }))
+        }
       ]
     },
     {
@@ -171,49 +172,60 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
               })}
             </div>
 
-            {groupedNavigation.map((group) => (
-              <div
-                key={group.label}
-                className={`desktop-dropdown${
-                  openDesktopGroup === group.label ? " is-open" : ""
-                }`}
-              >
-                <button
-                  type="button"
-                  className={`desktop-dropdown__trigger${
-                    isGroupActive(group.items) ? " is-active" : ""
-                  }`}
-                  aria-expanded={openDesktopGroup === group.label}
-                  onClick={() =>
-                    setOpenDesktopGroup((current) =>
-                      current === group.label ? null : group.label
-                    )
-                  }
+            {groupedNavigation.map((group) =>
+              group.href ? (
+                <Link
+                  key={group.label}
+                  href={group.href}
+                  className={pathname === group.href || pathname.startsWith(`${group.href}/`) ? "is-active" : undefined}
+                  onClick={() => setOpenDesktopGroup(null)}
                 >
                   {group.label}
-                  <ChevronDownIcon className="icon icon--tiny" />
-                </button>
-                <div className="desktop-dropdown__menu">
-                  {group.items.map((item) => {
-                    const Icon = item.icon;
-                    const isActive =
-                      pathname === item.href || pathname.startsWith(`${item.href}/`);
+                </Link>
+              ) : (
+                <div
+                  key={group.label}
+                  className={`desktop-dropdown${
+                    openDesktopGroup === group.label ? " is-open" : ""
+                  }`}
+                >
+                  <button
+                    type="button"
+                    className={`desktop-dropdown__trigger${
+                      isGroupActive(group.items) ? " is-active" : ""
+                    }`}
+                    aria-expanded={openDesktopGroup === group.label}
+                    onClick={() =>
+                      setOpenDesktopGroup((current) =>
+                        current === group.label ? null : group.label
+                      )
+                    }
+                  >
+                    {group.label}
+                    <ChevronDownIcon className="icon icon--tiny" />
+                  </button>
+                  <div className="desktop-dropdown__menu">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      const isActive =
+                        pathname === item.href || pathname.startsWith(`${item.href}/`);
 
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={isActive ? "is-active" : undefined}
-                        onClick={() => setOpenDesktopGroup(null)}
-                      >
-                        <Icon className="icon icon--tiny" />
-                        {item.label}
-                      </Link>
-                    );
-                  })}
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className={isActive ? "is-active" : undefined}
+                          onClick={() => setOpenDesktopGroup(null)}
+                        >
+                          <Icon className="icon icon--tiny" />
+                          {item.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            )}
           </nav>
 
           <div className="site-header__theme">

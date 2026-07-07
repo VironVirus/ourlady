@@ -176,48 +176,6 @@
         "Community outreach"
       ],
       "image": "/images/church/procession-street.jpeg"
-    },
-    {
-      "slug": "cmo",
-      "shortName": "CMO",
-      "name": "Catholic Men Organisation",
-      "description": "Men of the parish growing in faith, responsibility, and service.",
-      "lead": "CMO Leadership",
-      "meeting": "Second Sunday of the month",
-      "focus": [
-        "Service",
-        "Leadership",
-        "Family life"
-      ],
-      "image": "/images/church/front-exterior.jpeg"
-    },
-    {
-      "slug": "cwo",
-      "shortName": "CWO",
-      "name": "Catholic Women Organisation",
-      "description": "Prayer, welfare, support, and spiritual growth for women of the parish.",
-      "lead": "CWO Leadership",
-      "meeting": "First Sunday of the month",
-      "focus": [
-        "Prayer",
-        "Welfare",
-        "Celebrations"
-      ],
-      "image": "/images/church/procession-courtyard.jpeg"
-    },
-    {
-      "slug": "altar-servers",
-      "shortName": "Servers",
-      "name": "Altar Servers",
-      "description": "Young parish servants assisting at the altar with reverence and discipline.",
-      "lead": "Servers Coordinator",
-      "meeting": "Saturday practice",
-      "focus": [
-        "Liturgy",
-        "Discipline",
-        "Service"
-      ],
-      "image": "/images/church/altar-interior.jpeg"
     }
   ],
   "saints": [],

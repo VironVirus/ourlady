@@ -7,8 +7,7 @@ import {
   ClockIcon,
   CrossIcon,
   HomeIcon,
-  SparkIcon,
-  UsersIcon
+  SparkIcon
 } from "@/components/site-icons";
 
 const bottomLinks = [
@@ -16,8 +15,7 @@ const bottomLinks = [
   { href: "/mass-schedule", label: "Mass", icon: ClockIcon },
   { href: "/daily-readings", label: "Readings", icon: BookIcon },
   { href: "/news", label: "News", icon: SparkIcon },
-  { href: "/prayers", label: "Prayers", icon: CrossIcon },
-  { href: "/associations", label: "Groups", icon: UsersIcon }
+  { href: "/prayers", label: "Prayers", icon: CrossIcon }
 ];
 
 export function SiteBottomNav() {
