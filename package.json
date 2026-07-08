@@ -10,7 +10,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "start:standalone": "node .next/standalone/server.js",
+    "lint": "eslint app components lib --ext .js,.jsx,.ts,.tsx"
   },
   "dependencies": {
     "@romcal/calendar.general-roman": "3.0.0-dev.125",

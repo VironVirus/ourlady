@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -27,20 +27,17 @@ export function NewsBrowser({ items }: NewsBrowserProps) {
   );
   const [activeCategory, setActiveCategory] = useState(categories[0] ?? "All");
   const [page, setPage] = useState(1);
+  const selectedCategory = categories.includes(activeCategory) ? activeCategory : "All";
 
   const filteredItems =
-    activeCategory === "All"
+    selectedCategory === "All"
       ? items
-      : items.filter((item) => item.label === activeCategory);
+      : items.filter((item) => item.label === selectedCategory);
 
   const pageCount = Math.max(1, Math.ceil(filteredItems.length / pageSize));
   const currentPage = Math.min(page, pageCount);
   const startIndex = (currentPage - 1) * pageSize;
   const visibleItems = filteredItems.slice(startIndex, startIndex + pageSize);
-
-  useEffect(() => {
-    setPage(1);
-  }, [activeCategory]);
 
   if (items.length === 0) {
     return (
@@ -69,8 +66,11 @@ export function NewsBrowser({ items }: NewsBrowserProps) {
             <button
               key={category}
               type="button"
-              className={`news-filter${activeCategory === category ? " is-active" : ""}`}
-              onClick={() => setActiveCategory(category)}
+              className={`news-filter${selectedCategory === category ? " is-active" : ""}`}
+              onClick={() => {
+                setActiveCategory(category);
+                setPage(1);
+              }}
             >
               {category}
             </button>

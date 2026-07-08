@@ -26,12 +26,8 @@ export function NewsSlideshow({
     () => images.map((item) => item.trim()).filter(Boolean),
     [images]
   );
-  const slideKey = slides.join("|");
   const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [slideKey]);
+  const currentIndex = slides.length > 0 ? activeIndex % slides.length : 0;
 
   useEffect(() => {
     if (slides.length < 2) {
@@ -54,7 +50,7 @@ export function NewsSlideshow({
       {slides.map((image, index) => (
         <div
           key={`${image}-${index}`}
-          className={`news-slideshow__slide${index === activeIndex ? " is-active" : ""}`}
+          className={`news-slideshow__slide${index === currentIndex ? " is-active" : ""}`}
           style={{
             backgroundImage: `${overlay}, url(${image})`,
             backgroundPosition: position
@@ -72,7 +68,7 @@ export function NewsSlideshow({
       {slides.length > 1 ? (
         <div className="news-slideshow__dots" aria-hidden="true">
           {slides.map((image, index) => (
-            <span key={`${image}-dot-${index}`} className={index === activeIndex ? "is-active" : undefined} />
+            <span key={`${image}-dot-${index}`} className={index === currentIndex ? "is-active" : undefined} />
           ))}
         </div>
       ) : null}

@@ -19,11 +19,8 @@ type HomeNewsShowcaseProps = {
 
 export function HomeNewsShowcase({ items }: HomeNewsShowcaseProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeItem = items[activeIndex] ?? null;
-
-  useEffect(() => {
-    setActiveIndex(0);
-  }, [items.length]);
+  const currentIndex = items.length > 0 ? activeIndex % items.length : 0;
+  const activeItem = items[currentIndex] ?? null;
 
   useEffect(() => {
     if (items.length < 2) {
@@ -123,7 +120,7 @@ export function HomeNewsShowcase({ items }: HomeNewsShowcaseProps) {
             <button
               key={item.id}
               type="button"
-              className={index === activeIndex ? "is-active" : undefined}
+              className={index === currentIndex ? "is-active" : undefined}
               onClick={() => setActiveIndex(index)}
             />
           ))}

@@ -9,6 +9,21 @@ Next.js + TypeScript parish website for Our Lady of Lourdes Catholic Church, Mar
 3. Install dependencies with `pnpm install`.
 4. Start the site with `pnpm dev`.
 
+## Hostinger deployment
+
+This project is prepared for Hostinger's built-in GitHub deployment flow.
+
+Use these values in Hostinger:
+
+- `Package manager`: `pnpm`
+- `Root directory`: `/`
+- `Build command`: `pnpm build`
+- `Output directory`: leave blank if Hostinger allows it, otherwise use `.next`
+
+After the repository is connected in Hostinger, turn on automatic redeploy there so each push updates the live site.
+
+Setup steps are in [docs/hostinger-deploy.md](docs/hostinger-deploy.md).
+
 ## Netlify deployment
 
 This project is prepared for Netlify's current Next.js runtime.
