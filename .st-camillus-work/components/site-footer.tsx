@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { siteIdentity } from "@/lib/site-identity";
 
 type SiteFooterProps = {
   massSummary: string;
@@ -9,8 +10,9 @@ export function SiteFooter({ massSummary, town }: SiteFooterProps) {
   return (
     <footer className="site-footer">
       <div className="container site-footer__inner">
-        <div className="site-footer__block">
-          <strong>Our Lady of Lourdes Catholic Church</strong>
+        <div className="site-footer__block site-footer__block--identity">
+          <strong>{siteIdentity.shortName}</strong>
+          <p>For medical and health science students gathering in worship, formation, and service.</p>
           <p>{town}</p>
         </div>
 
@@ -22,9 +24,11 @@ export function SiteFooter({ massSummary, town }: SiteFooterProps) {
         <div className="site-footer__block">
           <strong>Explore</strong>
           <p className="site-footer__links">
-            <Link href="/associations">CYON</Link>
+            <Link href="/about">About</Link>
             <span aria-hidden="true">•</span>
             <Link href="/contact">Contact</Link>
+            <span aria-hidden="true">•</span>
+            <Link href="/daily-readings">Readings</Link>
           </p>
         </div>
 

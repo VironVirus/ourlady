@@ -3287,6 +3287,27 @@ html[data-appearance="dark"] .admin-link--danger {
   font-size: 0.82rem;
 }
 
+.today-panel__reading-body {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 0.4rem;
+}
+
+.today-panel__reading-body p,
+.today-panel__reading-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.today-panel__reading-body p {
+  font-size: 0.96rem;
+}
+
+.today-panel__reading-note {
+  font-size: 0.88rem;
+}
+
 .daily-devotion-card {
   display: grid;
   gap: 0.9rem;
@@ -3996,5 +4017,725 @@ html[data-appearance="dark"] .empty-state {
 
   .site-footer {
     padding-bottom: calc(7.4rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* St Camillus refresh */
+
+:root {
+  --radius-xl: 28px;
+  --radius-lg: 22px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --container: 1200px;
+  --serif: "Palatino Linotype", Baskerville, "Book Antiqua", Georgia, serif;
+  --sans: Optima, Candara, "Avenir Next", "Segoe UI", sans-serif;
+}
+
+body {
+  position: relative;
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--brand-soft) 36%, transparent), transparent 28%),
+    radial-gradient(circle at left 12%, color-mix(in srgb, var(--brand) 12%, transparent), transparent 24%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--background) 88%, white) 0%,
+      var(--background) 48%,
+      color-mix(in srgb, var(--background-soft) 88%, white) 100%
+    );
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body::before {
+  background:
+    linear-gradient(color-mix(in srgb, var(--brand-deep) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--brand-deep) 7%, transparent) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 82%);
+}
+
+body::after {
+  background:
+    radial-gradient(circle at top left, color-mix(in srgb, var(--brand-soft) 30%, transparent), transparent 22%),
+    radial-gradient(circle at bottom right, color-mix(in srgb, var(--brand) 14%, transparent), transparent 18%);
+  opacity: 0.8;
+}
+
+.site-shell {
+  position: relative;
+}
+
+.section {
+  padding: clamp(2.4rem, 4vw, 4.4rem) 0;
+}
+
+.section--soft::before {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-soft) 10%, transparent), rgba(255, 255, 255, 0.36)),
+    color-mix(in srgb, var(--background-soft) 62%, white);
+}
+
+.site-header {
+  padding-top: 0.7rem;
+  background: transparent;
+  border-bottom: none;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.site-header__inner {
+  padding: 0.82rem 1rem;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 10%, transparent);
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 92%, white),
+      color-mix(in srgb, var(--surface) 92%, var(--background-soft) 8%)
+    );
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--brand-deep) 9%, transparent);
+}
+
+.site-header--minimal .site-header__inner {
+  background: color-mix(in srgb, var(--surface-strong) 94%, white);
+}
+
+.brand-mark {
+  gap: 0.85rem;
+}
+
+.brand-mark__seal {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--brand) 88%, white), var(--brand-deep));
+  color: #f8fffd;
+  box-shadow: 0 18px 35px color-mix(in srgb, var(--brand-deep) 22%, transparent);
+}
+
+.brand-mark__text strong {
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.brand-mark__text small {
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.site-nav {
+  gap: 0.5rem;
+}
+
+.site-nav__cluster,
+.theme-toggle {
+  padding: 0.28rem;
+  border-radius: 1rem;
+  border-color: color-mix(in srgb, var(--brand-deep) 10%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 94%, white),
+      color-mix(in srgb, var(--surface) 90%, var(--background-soft) 10%)
+    );
+}
+
+.site-nav--desktop a,
+.desktop-dropdown__trigger,
+.theme-toggle__button,
+.mobile-menu-button {
+  min-height: 2.35rem;
+  border-radius: 0.85rem;
+}
+
+.site-nav--desktop a,
+.desktop-dropdown__trigger {
+  padding: 0.45rem 0.78rem;
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+
+.site-nav--desktop a:hover,
+.desktop-dropdown__trigger:hover,
+.desktop-dropdown:focus-within .desktop-dropdown__trigger,
+.site-nav--desktop a.is-active,
+.desktop-dropdown__trigger.is-active,
+.theme-toggle__button.is-active {
+  background: color-mix(in srgb, var(--brand-soft) 18%, white);
+  color: var(--brand-deep);
+  border-color: color-mix(in srgb, var(--brand-deep) 10%, transparent);
+}
+
+.desktop-dropdown__menu,
+.site-mobile-menu__inner {
+  border-color: color-mix(in srgb, var(--brand-deep) 10%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 94%, white),
+      color-mix(in srgb, var(--surface) 88%, var(--background-soft) 12%)
+    );
+  box-shadow: 0 24px 64px color-mix(in srgb, var(--brand-deep) 12%, transparent);
+}
+
+.site-saint-pill {
+  border-radius: 1.05rem;
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--brand-soft) 16%, white),
+      color-mix(in srgb, var(--surface-strong) 88%, white)
+    );
+}
+
+.page-intro {
+  position: relative;
+  overflow: hidden;
+  padding: 5.6rem 0 2.8rem;
+}
+
+.page-intro::before {
+  content: "";
+  position: absolute;
+  inset: auto -12% -20% auto;
+  width: 24rem;
+  height: 24rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--brand-soft) 24%, transparent), transparent 70%);
+  pointer-events: none;
+}
+
+.page-intro__inner {
+  position: relative;
+}
+
+.page-intro__card {
+  width: min(100%, 44rem);
+  padding: 1.4rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 9%, transparent);
+  border-radius: 1.8rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 94%, white),
+      color-mix(in srgb, var(--surface) 88%, var(--background-soft) 12%)
+    );
+  box-shadow: 0 24px 60px color-mix(in srgb, var(--brand-deep) 10%, transparent);
+}
+
+.page-intro--photo {
+  padding: 6rem 0 3rem;
+}
+
+.page-intro--photo .page-intro__card {
+  background: rgba(7, 26, 30, 0.42);
+  border-color: rgba(240, 249, 246, 0.18);
+  backdrop-filter: blur(18px);
+}
+
+.page-intro--photo h1,
+.page-intro--photo p,
+.page-intro--photo .eyebrow {
+  color: #f3fcfb;
+}
+
+.hero--immersive .hero__content {
+  min-height: 82vh;
+  padding: 6.2rem 0 3rem;
+}
+
+.hero__split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(18rem, 0.78fr);
+  gap: 1.1rem;
+  width: 100%;
+  align-items: end;
+}
+
+.hero__panel {
+  width: 100%;
+  padding: 1.7rem;
+  border-radius: 2rem;
+  background:
+    linear-gradient(145deg, rgba(6, 25, 28, 0.54), rgba(6, 25, 28, 0.28));
+  border: 1px solid rgba(236, 250, 247, 0.18);
+}
+
+.hero__panel--camillus h1 {
+  max-width: 10ch;
+}
+
+.hero__kicker-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hero__pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.7rem;
+  border-radius: 999px;
+  background: rgba(237, 251, 247, 0.12);
+  border: 1px solid rgba(237, 251, 247, 0.16);
+  color: rgba(243, 252, 251, 0.92);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero__pulse-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-soft) 70%, white);
+  box-shadow: 0 0 0 6px rgba(237, 251, 247, 0.08);
+}
+
+.hero__tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.15rem;
+}
+
+.hero__tag-row span {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.56rem 0.84rem;
+  border-radius: 999px;
+  background: rgba(243, 252, 251, 0.1);
+  border: 1px solid rgba(243, 252, 251, 0.12);
+  color: rgba(243, 252, 251, 0.92);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.hero__rail {
+  display: grid;
+}
+
+.hero__rail-card {
+  padding: 1.35rem;
+  border-radius: 1.8rem;
+  border: 1px solid rgba(238, 250, 248, 0.18);
+  background:
+    linear-gradient(180deg, rgba(6, 25, 28, 0.62), rgba(6, 25, 28, 0.34));
+  color: #f0fbf9;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.22);
+}
+
+.hero__rail-card h2 {
+  margin: 0.9rem 0 0;
+  font-size: clamp(1.55rem, 2.6vw, 2rem);
+  line-height: 1.08;
+}
+
+.hero__rail-date {
+  margin: 0.5rem 0 0;
+  color: rgba(240, 251, 249, 0.76);
+  line-height: 1.6;
+}
+
+.hero__rail-times,
+.hero__rail-details {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.hero__rail-time,
+.hero__rail-detail {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.95rem 1rem;
+  border-radius: 1.2rem;
+  background: rgba(240, 251, 249, 0.08);
+  border: 1px solid rgba(240, 251, 249, 0.11);
+}
+
+.hero__rail-detail span {
+  color: rgba(240, 251, 249, 0.68);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hero__rail-time strong,
+.hero__rail-detail strong {
+  color: #f5fcfb;
+  font-family: var(--serif);
+  font-size: 1.05rem;
+}
+
+.hero__rail-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  align-items: center;
+}
+
+.hero__dots span {
+  width: 1.15rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: rgba(243, 252, 251, 0.5);
+}
+
+.panel,
+.story-card,
+.news-card,
+.dashboard-card,
+.news-preview-card,
+.home-news-showcase,
+.empty-state {
+  border-color: color-mix(in srgb, var(--brand-deep) 9%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 96%, white),
+      color-mix(in srgb, var(--surface) 88%, var(--background-soft) 12%)
+    );
+  box-shadow: 0 22px 54px color-mix(in srgb, var(--brand-deep) 8%, transparent);
+}
+
+.section-badge {
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--brand-soft) 22%, white);
+  color: var(--brand-deep);
+}
+
+.section-badge--light {
+  background: rgba(240, 251, 249, 0.12);
+  color: #f0fbf9;
+}
+
+.chip {
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--brand-soft) 16%, white);
+  border-color: color-mix(in srgb, var(--brand-deep) 8%, transparent);
+}
+
+.button {
+  min-height: 3.1rem;
+  padding: 0.76rem 1.15rem;
+  border-radius: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.button--primary {
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--brand) 88%, white),
+    color-mix(in srgb, var(--brand-deep) 86%, black)
+  );
+  box-shadow: 0 18px 42px color-mix(in srgb, var(--brand-deep) 22%, transparent);
+}
+
+.button--secondary {
+  background: color-mix(in srgb, var(--surface-strong) 96%, white);
+  border-color: color-mix(in srgb, var(--brand-deep) 10%, transparent);
+}
+
+.button--ghost {
+  background: rgba(240, 251, 249, 0.1);
+  border-color: rgba(240, 251, 249, 0.15);
+}
+
+.today-panel {
+  padding: 1.7rem;
+}
+
+.today-panel__grid {
+  grid-template-columns: minmax(0, 1.22fr) minmax(18rem, 0.78fr);
+}
+
+.today-panel__time,
+.today-panel__detail,
+.today-panel__saint,
+.today-panel__readings,
+.daily-devotion-card,
+.daily-reflection-note {
+  border-color: color-mix(in srgb, var(--brand-deep) 8%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 95%, white),
+      color-mix(in srgb, var(--surface) 87%, var(--background-soft) 13%)
+    );
+}
+
+.today-panel__quote {
+  border-left-color: color-mix(in srgb, var(--brand) 80%, transparent);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--brand-soft) 22%, white),
+      color-mix(in srgb, var(--surface-strong) 94%, white)
+    );
+}
+
+.today-panel__reading {
+  border-bottom-color: color-mix(in srgb, var(--brand-deep) 7%, transparent);
+}
+
+.today-panel__note,
+.today-panel__reading-note,
+.daily-devotion-card__body p,
+.daily-devotion-card small,
+.daily-reflection-note strong {
+  color: var(--muted);
+}
+
+.news-preview-card__body {
+  gap: 0.8rem;
+}
+
+.home-news-showcase {
+  border-radius: 2rem;
+}
+
+.home-news-showcase__top,
+.home-news-showcase__footer,
+.home-news-showcase__meta {
+  align-items: center;
+}
+
+.home-news-showcase__image {
+  min-height: 16rem;
+  border-radius: 1.4rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 8%, transparent);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.home-news-showcase h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(1.65rem, 2.8vw, 2.25rem);
+  color: var(--brand-deep);
+}
+
+.home-news-showcase__meta {
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.home-news-showcase p {
+  margin: 0;
+  line-height: 1.75;
+}
+
+.home-news-showcase__nav,
+.home-news-showcase__dots button {
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--brand-soft) 16%, white);
+  border-color: color-mix(in srgb, var(--brand-deep) 8%, transparent);
+}
+
+.home-news-showcase__dots button.is-active {
+  background: linear-gradient(135deg, var(--brand), var(--brand-deep));
+}
+
+.quick-link-grid {
+  gap: 1rem;
+}
+
+.quick-link {
+  min-height: 10.8rem;
+  border-radius: 1.8rem;
+  border-color: rgba(240, 251, 249, 0.18);
+}
+
+.quick-link strong {
+  font-size: 1.18rem;
+}
+
+.site-footer {
+  padding: 1.4rem 0 1.8rem;
+  border-top-color: color-mix(in srgb, var(--brand-deep) 8%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--background) 74%, white),
+      color-mix(in srgb, var(--background-soft) 84%, white)
+    );
+}
+
+.site-footer__inner {
+  padding: 1rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--brand-deep) 8%, transparent);
+  border-radius: 1.8rem;
+  background: color-mix(in srgb, var(--surface-strong) 86%, white);
+  box-shadow: 0 20px 48px color-mix(in srgb, var(--brand-deep) 7%, transparent);
+}
+
+.site-footer__block--identity strong {
+  font-size: 1rem;
+}
+
+.site-bottom-nav {
+  border-radius: 1.35rem;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 96%, white),
+      color-mix(in srgb, var(--surface) 88%, var(--background-soft) 12%)
+    );
+  box-shadow: 0 22px 52px color-mix(in srgb, var(--brand-deep) 14%, transparent);
+}
+
+.site-bottom-nav a {
+  border-radius: 0.95rem;
+}
+
+.site-bottom-nav a.is-active {
+  background: color-mix(in srgb, var(--brand-soft) 18%, white);
+  color: var(--brand-deep);
+}
+
+html[data-appearance="dark"] body {
+  background:
+    radial-gradient(circle at top right, color-mix(in srgb, var(--brand-soft) 16%, transparent), transparent 28%),
+    radial-gradient(circle at left 12%, color-mix(in srgb, var(--brand) 9%, transparent), transparent 24%),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--background) 90%, black) 0%,
+      var(--background) 48%,
+      color-mix(in srgb, var(--background-soft) 92%, black) 100%
+    );
+}
+
+html[data-appearance="dark"] .site-header__inner,
+html[data-appearance="dark"] .site-footer__inner,
+html[data-appearance="dark"] .page-intro__card,
+html[data-appearance="dark"] .desktop-dropdown__menu,
+html[data-appearance="dark"] .site-mobile-menu__inner,
+html[data-appearance="dark"] .site-bottom-nav {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 84%, black),
+      color-mix(in srgb, var(--surface) 88%, var(--background-soft) 12%)
+    );
+}
+
+html[data-appearance="dark"] .panel,
+html[data-appearance="dark"] .story-card,
+html[data-appearance="dark"] .news-card,
+html[data-appearance="dark"] .dashboard-card,
+html[data-appearance="dark"] .news-preview-card,
+html[data-appearance="dark"] .home-news-showcase,
+html[data-appearance="dark"] .today-panel__time,
+html[data-appearance="dark"] .today-panel__detail,
+html[data-appearance="dark"] .today-panel__saint,
+html[data-appearance="dark"] .today-panel__readings,
+html[data-appearance="dark"] .daily-devotion-card,
+html[data-appearance="dark"] .daily-reflection-note,
+html[data-appearance="dark"] .empty-state {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--surface-strong) 78%, black),
+      color-mix(in srgb, var(--surface) 86%, var(--background-soft) 14%)
+    );
+}
+
+html[data-appearance="dark"] .section--soft::before {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--brand-soft) 7%, transparent), rgba(4, 10, 12, 0.16)),
+    color-mix(in srgb, var(--background-soft) 88%, black);
+}
+
+html[data-appearance="dark"] .page-intro--photo .page-intro__card {
+  background: rgba(5, 21, 25, 0.58);
+}
+
+html[data-appearance="dark"] .button--ghost {
+  background: rgba(240, 251, 249, 0.08);
+}
+
+@media (max-width: 1120px) {
+  .site-header {
+    padding-top: 0.5rem;
+  }
+
+  .site-header__inner {
+    padding: 0.75rem 0.85rem;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero__split,
+  .today-panel__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero--immersive .hero__content {
+    min-height: 78vh;
+  }
+
+  .hero__rail {
+    max-width: 32rem;
+  }
+
+  .site-footer__inner {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header__inner {
+    padding: 0.72rem;
+    border-radius: 1.1rem;
+  }
+
+  .hero--immersive .hero__content {
+    min-height: 74vh;
+    padding: 5.4rem 0 1.8rem;
+  }
+
+  .hero__panel,
+  .hero__rail-card,
+  .page-intro__card,
+  .today-panel {
+    padding: 1.15rem;
+    border-radius: 1.35rem;
+  }
+
+  .hero__kicker-row,
+  .hero__rail-actions {
+    align-items: flex-start;
+  }
+
+  .hero__tag-row {
+    gap: 0.45rem;
+  }
+
+  .hero__tag-row span {
+    font-size: 0.76rem;
+  }
+
+  .site-bottom-nav {
+    width: min(calc(100% - 0.45rem), 24rem);
   }
 }

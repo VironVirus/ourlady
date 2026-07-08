@@ -1,0 +1,172 @@
+{
+  "homeIntro": "Faith, Healing, Formation",
+  "welcomeMessage": "Welcome to St Camillus de Lellis Chaplaincy, Maryland, College of Health Sciences, Okofia, Nnewi, Anambra State.",
+  "mission": "A Catholic chaplaincy for medical students, rooted in prayer, service, study, and healing compassion.",
+  "churchTimesNote": "Please check again during the week for feast-day, academic-calendar, and chaplaincy schedule changes.",
+  "themePreset": "gold",
+  "theme": {
+    "primary": "#9a7431",
+    "secondary": "#4a3219",
+    "accent": "#d9b86d",
+    "background": "#f5efe5",
+    "backgroundSoft": "#ece1cf"
+  },
+  "themeSchedule": [],
+  "parishHistory": {
+    "heading": "About the Chaplaincy",
+    "summary": "A Catholic student community serving the College of Health Sciences in Okofia, Nnewi.",
+    "milestones": [
+      "Prayer",
+      "Formation",
+      "Healing Service"
+    ],
+    "body": [
+      "St Camillus de Lellis Chaplaincy serves students, staff, and friends of the College of Health Sciences with Catholic worship, formation, and sacramental life.",
+      "As a student-based community, the chaplaincy supports medical and health science students with prayer, moral formation, daily readings, service, and a steady Catholic presence within academic life."
+    ]
+  },
+  "massSchedule": [
+    {
+      "id": "mass-2026-07-04",
+      "title": "Saturday Students' Vigil Mass",
+      "date": "2026-07-04",
+      "day": "Saturday",
+      "masses": [
+        "5:00 PM"
+      ],
+      "time": "5:00 PM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "Rosary begins shortly before Mass.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-05",
+      "title": "Sunday Students' Mass",
+      "date": "2026-07-05",
+      "day": "Sunday",
+      "masses": [
+        "8:00 AM"
+      ],
+      "time": "8:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "Main student community Mass for the week.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-06",
+      "title": "Weekday Students' Mass",
+      "date": "2026-07-06",
+      "day": "Monday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-07",
+      "title": "Weekday Students' Mass",
+      "date": "2026-07-07",
+      "day": "Tuesday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-08",
+      "title": "Weekday Students' Mass",
+      "date": "2026-07-08",
+      "day": "Wednesday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-09",
+      "title": "Weekday Students' Mass",
+      "date": "2026-07-09",
+      "day": "Thursday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    },
+    {
+      "id": "mass-2026-07-10",
+      "title": "Friday Students' Mass",
+      "date": "2026-07-10",
+      "day": "Friday",
+      "masses": [
+        "6:00 AM"
+      ],
+      "time": "6:00 AM",
+      "venue": "Chaplaincy",
+      "detail": "Chaplaincy",
+      "note": "Extra devotions may follow as announced by the chaplaincy.",
+      "liturgyTitle": "",
+      "liturgySeason": "",
+      "liturgyColor": "",
+      "saintSlug": ""
+    }
+  ],
+  "priests": [],
+  "contact": {
+    "address": "St Camillus de Lellis Chaplaincy",
+    "town": "Maryland, College of Health Sciences, Okofia, Nnewi, Anambra State",
+    "diocese": "",
+    "phone": "",
+    "email": "",
+    "officeHours": [
+      "Sunday Students' Mass: 8:00 AM",
+      "Monday to Friday Mass: 6:00 AM",
+      "Special devotions follow chaplaincy announcements"
+    ],
+    "mapNote": ""
+  },
+  "gallery": [],
+  "pastoralUnits": [],
+  "associations": [],
+  "saints": [],
+  "prayers": [],
+  "reflections": [],
+  "newsItems": [],
+  "documents": [],
+  "announcements": []
+}
