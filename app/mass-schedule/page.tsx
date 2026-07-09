@@ -5,6 +5,8 @@ import { getSiteContent } from "@/lib/content";
 import { getLiturgicalDayMap } from "@/lib/liturgical-calendar";
 import {
   getMassTimes,
+  getSaintForDate,
+  getSaintHref,
   getMassVenue,
   getRollingMassWeek
 } from "@/lib/site-runtime";
@@ -26,11 +28,6 @@ export default async function MassSchedulePage() {
     content.saints
       .filter((item) => item.published)
       .map((item) => [item.slug, item] as const)
-  );
-  const saintsByDate = new Map(
-    content.saints
-      .filter((item) => item.published && item.displayDate)
-      .map((item) => [item.displayDate, item] as const)
   );
 
   return (
@@ -57,9 +54,15 @@ export default async function MassSchedulePage() {
             const liturgicalDay = liturgicalMap[entry.dateKey];
             const saint =
               (item?.saintSlug ? saintsBySlug.get(item.saintSlug) : null) ??
-              saintsByDate.get(entry.dateKey) ??
+              getSaintForDate(content, entry.dateKey, liturgicalDay?.saint?.name || "") ??
               null;
             const automaticSaint = !saint && liturgicalDay?.saint ? liturgicalDay.saint : null;
+            const saintHref = getSaintHref({
+              content,
+              dateKey: entry.dateKey,
+              saint,
+              automaticSaint
+            });
             const celebration = item?.liturgyTitle || liturgicalDay?.title || "";
             const season = item?.liturgySeason || liturgicalDay?.season || "";
             const liturgicalColor = item?.liturgyColor || liturgicalDay?.color || "";
@@ -99,12 +102,12 @@ export default async function MassSchedulePage() {
                 ) : null}
 
                 {saint ? (
-                  <Link href={`/saints/${saint.slug}`} className="mass-day-card__saint">
+                  <Link href={saintHref} className="mass-day-card__saint">
                     <CrossIcon className="icon icon--tiny" />
                     Saint of the day: {saint.name}
                   </Link>
                 ) : automaticSaint ? (
-                  <Link href="/saints" className="mass-day-card__saint">
+                  <Link href={saintHref} className="mass-day-card__saint">
                     <CrossIcon className="icon icon--tiny" />
                     Saint of the day: {automaticSaint.name}
                   </Link>

@@ -11,11 +11,12 @@ import { getSiteContent } from "@/lib/content";
 import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
 import { getPublishedNewsPosts } from "@/lib/news";
 import {
-  getActiveSaint,
   getMassEntryForDate,
   getMassTimes,
   getMassVenue,
   getRollingMassWeek,
+  getSaintForDate,
+  getSaintHref,
   getSiteDateKey
 } from "@/lib/site-runtime";
 import {
@@ -39,7 +40,6 @@ export default async function HomePage() {
     getPublishedNewsPosts(),
     getLiturgicalDayInfo(dateKey)
   ]);
-  const activeSaint = getActiveSaint(content, dateKey);
   const todayEntry = getMassEntryForDate(content, dateKey);
   const nextUpcomingEntry =
     getRollingMassWeek(content).find((entry) => entry.item) ?? todayEntry;
@@ -56,8 +56,14 @@ export default async function HomePage() {
   const focusSaint =
     (focusItem?.saintSlug
       ? content.saints.find((item) => item.slug === focusItem.saintSlug && item.published)
-      : null) ?? activeSaint;
+      : null) ?? getSaintForDate(content, dateKey, liturgicalDay?.saint?.name || "");
   const automaticSaint = !focusSaint && liturgicalDay?.saint ? liturgicalDay.saint : null;
+  const saintHref = getSaintHref({
+    content,
+    dateKey,
+    saint: focusSaint,
+    automaticSaint
+  });
   const dailyReadings = liturgicalDay?.readings ?? null;
   const quickLinks = [
     {
@@ -188,12 +194,12 @@ export default async function HomePage() {
 
               <div className="today-panel__side">
                 {focusSaint ? (
-                  <Link href={`/saints/${focusSaint.slug}`} className="today-panel__saint">
+                  <Link href={saintHref} className="today-panel__saint">
                     <span>Saint of the Day</span>
                     <strong>{focusSaint.name}</strong>
                   </Link>
                 ) : automaticSaint ? (
-                  <Link href="/saints" className="today-panel__saint">
+                  <Link href={saintHref} className="today-panel__saint">
                     <span>Saint of the Day</span>
                     <strong>{automaticSaint.name}</strong>
                   </Link>

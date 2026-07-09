@@ -3471,6 +3471,100 @@ html[data-appearance="dark"] .admin-link--danger {
   gap: 0.95rem;
 }
 
+.priests-directory,
+.saint-day-grid,
+.saint-day-list,
+.saint-source-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.priest-directory-item,
+.saint-day-card,
+.saint-day-item,
+.saint-source-link {
+  border: 1px solid var(--line);
+  border-radius: 1.1rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  color: inherit;
+  box-shadow: 0 16px 34px color-mix(in srgb, var(--shadow) 35%, transparent);
+}
+
+.priest-directory-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1.1rem 1.15rem;
+}
+
+.priest-directory-item__body {
+  display: grid;
+  gap: 0.34rem;
+}
+
+.priest-directory-item__body span,
+.saint-day-card span,
+.saint-day-item span,
+.saint-source-link span {
+  color: var(--brand);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.priest-directory-item__body h2 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 1.32rem;
+}
+
+.priest-directory-item__body p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.72;
+}
+
+.saint-day-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.saint-day-card,
+.saint-day-item,
+.saint-source-link {
+  display: grid;
+  gap: 0.32rem;
+  padding: 1rem 1.05rem;
+  text-decoration: none;
+}
+
+.saint-day-card strong,
+.saint-day-item strong,
+.saint-source-link strong {
+  color: var(--brand-deep);
+  font-family: var(--serif);
+  font-size: 1.08rem;
+}
+
+.saint-day-card small,
+.saint-day-item small,
+.saint-source-link small {
+  color: var(--muted);
+}
+
+.saint-day-card em {
+  color: var(--brand-deep);
+  font-size: 0.88rem;
+  font-style: normal;
+}
+
+.saint-day-card.is-active,
+.saint-day-item.is-active {
+  border-color: color-mix(in srgb, var(--brand-deep) 22%, var(--line));
+  background: color-mix(in srgb, var(--brand-soft) 24%, var(--surface));
+}
+
 .feed-item {
   display: grid;
   gap: 0.22rem;
@@ -3724,6 +3818,14 @@ html[data-appearance="dark"] .empty-state {
   .admin-manager__editor-head {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .saint-day-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-directory-item {
+    grid-template-columns: 1fr;
   }
 
   .hero__actions {

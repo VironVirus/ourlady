@@ -1,4 +1,5 @@
 const localhostUrl = "http://localhost:3000";
+const officialSiteUrl = "https://ollpenugu.com";
 
 function normalizeUrl(value: string) {
   try {
@@ -14,7 +15,7 @@ export function getSiteUrl() {
     process.env.SITE_URL ||
     process.env.URL ||
     process.env.DEPLOY_PRIME_URL ||
-    localhostUrl;
+    (process.env.NODE_ENV === "development" ? localhostUrl : officialSiteUrl);
 
   return normalizeUrl(candidate);
 }

@@ -7,11 +7,12 @@ import { getUsccbReadingsUrl } from "@/lib/daily-readings";
 import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
 import { churchPhotos } from "@/lib/site-media";
 import {
-  getActiveSaint,
   getMassDateLabel,
   getMassEntryForDate,
   getMassTimes,
   getMassVenue,
+  getSaintForDate,
+  getSaintHref,
   getSiteDateKey
 } from "@/lib/site-runtime";
 
@@ -102,9 +103,14 @@ export default async function DailyReadingsPage() {
   const labels = getMassDateLabel(dateKey);
   const massEntry = getMassEntryForDate(content, dateKey);
   const massItem = massEntry?.item ?? null;
-  const activeSaint = getActiveSaint(content, dateKey);
-  const automaticSaint = liturgicalDay?.saint ?? null;
-  const focusSaint = activeSaint ?? null;
+  const focusSaint = getSaintForDate(content, dateKey, liturgicalDay?.saint?.name || "");
+  const automaticSaint = !focusSaint ? liturgicalDay?.saint ?? null : null;
+  const saintHref = getSaintHref({
+    content,
+    dateKey,
+    saint: focusSaint,
+    automaticSaint
+  });
   const massTimes = massItem ? getMassTimes(massItem) : [];
   const reflectionTheme =
     massItem?.reflectionTheme || "Walk with Christ today in prayer, charity, and joyful witness.";
@@ -252,11 +258,11 @@ export default async function DailyReadingsPage() {
               </p>
               <div className="today-panel__actions">
                 {focusSaint ? (
-                  <Link href={`/saints/${focusSaint.slug}`} className="button button--secondary">
+                  <Link href={saintHref} className="button button--secondary">
                     Read Saint Story
                   </Link>
                 ) : (
-                  <Link href="/saints" className="button button--secondary">
+                  <Link href={saintHref} className="button button--secondary">
                     Open Saints Page
                   </Link>
                 )}

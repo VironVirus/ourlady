@@ -1,8 +1,16 @@
-import type { MassScheduleItem, PrayerItem, SaintItem, SiteContent } from "@/lib/content";
+import type {
+  MassScheduleItem,
+  PrayerItem,
+  PriestProfile,
+  SaintItem,
+  SiteContent
+} from "@/lib/content";
+import type { LiturgicalSaintInfo } from "@/lib/liturgical-calendar";
 import {
   getThemePresetPalette,
   mapLiturgicalColorToThemePreset
 } from "@/lib/theme-presets";
+import { slugify } from "@/lib/slug";
 
 export const siteTimeZone = "Africa/Lagos";
 
@@ -231,6 +239,77 @@ export function getVisibleSaints(content: SiteContent, dateKey = getSiteDateKey(
 
 export function getActiveSaint(content: SiteContent, dateKey = getSiteDateKey()) {
   return getVisibleSaints(content, dateKey).find((item) => item.displayDate === dateKey) ?? null;
+}
+
+function normalizeSaintMatchName(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/\b(saint|st|blessed|bl|holy)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
+
+export function findMatchingSaint(content: SiteContent, name: string, dateKey = getSiteDateKey()) {
+  const normalizedName = normalizeSaintMatchName(name);
+
+  if (!normalizedName) {
+    return null;
+  }
+
+  return (
+    getVisibleSaints(content, dateKey).find((item) =>
+      [item.name, item.title, item.feastDay].some(
+        (candidate) => normalizeSaintMatchName(candidate) === normalizedName
+      )
+    ) ?? null
+  );
+}
+
+export function getSaintForDate(
+  content: SiteContent,
+  dateKey = getSiteDateKey(),
+  automaticSaintName = ""
+) {
+  return getActiveSaint(content, dateKey) ?? findMatchingSaint(content, automaticSaintName, dateKey);
+}
+
+export function getSaintDateHref(dateKey = getSiteDateKey()) {
+  return `/saints/day/${dateKey}`;
+}
+
+export function getSaintHref({
+  content,
+  dateKey = getSiteDateKey(),
+  saint,
+  automaticSaint
+}: {
+  content?: SiteContent;
+  dateKey?: string;
+  saint?: SaintItem | null;
+  automaticSaint?: LiturgicalSaintInfo | null;
+}) {
+  const matchingSaint =
+    saint ?? (content && automaticSaint?.name ? getSaintForDate(content, dateKey, automaticSaint.name) : null);
+
+  if (matchingSaint) {
+    return `/saints/${matchingSaint.slug}`;
+  }
+
+  if (automaticSaint?.name) {
+    return getSaintDateHref(dateKey);
+  }
+
+  return "/saints";
+}
+
+export function getPriestSlug(priest: PriestProfile, index = 0) {
+  return slugify(priest.name || priest.title || priest.id, `priest-${index + 1}`);
+}
+
+export function findPriestBySlug(content: SiteContent, slug: string) {
+  return (
+    content.priests.find((priest, index) => getPriestSlug(priest, index) === slug) ?? null
+  );
 }
 
 export function getVisiblePrayers(content: SiteContent) {

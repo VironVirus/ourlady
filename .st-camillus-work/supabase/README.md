@@ -18,6 +18,7 @@ The default storage bucket name is `st-camillus-media`.
 ## What to create in Supabase
 
 1. Run `supabase/schema.sql` in the Supabase SQL editor.
+   For the St Camillus project, you can use `supabase/st-camillus-setup.sql`.
 2. Confirm these tables exist:
    - `site_content`
    - `news_posts`

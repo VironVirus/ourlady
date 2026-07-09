@@ -9,9 +9,10 @@ import { getLiturgicalDayInfo } from "@/lib/liturgical-calendar";
 import { churchPhotos } from "@/lib/site-media";
 import { getSiteUrl, toAbsoluteMediaUrl } from "@/lib/site-url";
 import {
-  getActiveSaint,
   getMassEntryForDate,
   getMassTimes,
+  getSaintForDate,
+  getSaintHref,
   getSiteDateKey,
   getRollingMassWeek,
   resolveThemePreset
@@ -85,8 +86,14 @@ export default async function RootLayout({
     getSiteContent(),
     getLiturgicalDayInfo(dateKey)
   ]);
-  const activeSaint = getActiveSaint(content, dateKey);
+  const activeSaint = getSaintForDate(content, dateKey, liturgicalDay?.saint?.name || "");
   const automaticSaint = liturgicalDay?.saint;
+  const activeSaintHref = getSaintHref({
+    content,
+    dateKey,
+    saint: activeSaint,
+    automaticSaint: activeSaint ? null : automaticSaint ?? null
+  });
   const nextMassEntry = getRollingMassWeek(content).find((entry) => entry.item);
   const nextMassDay = nextMassEntry?.item ?? null;
   const nextMassTimes = nextMassDay ? getMassTimes(nextMassDay).slice(0, 2).join(" · ") : "";
@@ -105,16 +112,11 @@ export default async function RootLayout({
         <div className="site-shell">
           <SiteHeader
             activeSaint={
-              activeSaint
+              activeSaint || automaticSaint
                 ? {
-                    name: activeSaint.name,
-                    href: `/saints/${activeSaint.slug}`
+                    name: activeSaint?.name || automaticSaint?.name || "",
+                    href: activeSaintHref
                   }
-                : automaticSaint
-                  ? {
-                      name: automaticSaint.name,
-                      href: "/saints"
-                    }
                 : undefined
             }
             associations={content.associations.map((item) => ({
