@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { AdminShell } from "@/components/admin-shell";
 import { requireAdmin } from "@/lib/auth";
+import {
+  readAttendanceRequests,
+  readConfessionSchedules,
+  readHymnPlans,
+  readMissalEntries
+} from "@/lib/community-modules";
 import { adminSectionGroups, type AdminSectionHref } from "@/lib/admin-nav";
 import { readDocuments } from "@/lib/documents";
 import { getSiteContent } from "@/lib/content";
@@ -17,16 +23,24 @@ type AdminPageProps = {
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   await requireAdmin();
   const params = await searchParams;
-  const [content, newsItems, documents] = await Promise.all([
+  const [content, newsItems, documents, attendanceRequests, confessionSchedules, missalEntries, hymnPlans] = await Promise.all([
     getSiteContent(),
     readNewsPosts(),
-    readDocuments()
+    readDocuments(),
+    readAttendanceRequests(),
+    readConfessionSchedules(),
+    readMissalEntries(),
+    readHymnPlans()
   ]);
   const supabaseEnabled = isSupabaseConfigured();
 
   const sectionCounts: Partial<Record<AdminSectionHref, string>> = {
     "/admin/general": "Home, history, contact",
     "/admin/mass": `${content.massSchedule.length} schedule items`,
+    "/admin/attendance": `${attendanceRequests.length} QR requests`,
+    "/admin/confession": `${confessionSchedules.length} confession days`,
+    "/admin/missal": `${missalEntries.length} missal entries`,
+    "/admin/hymns": `${hymnPlans.length} hymn plans`,
     "/admin/pastoral": `${content.pastoralUnits.length} student units`,
     "/admin/announcements": `${content.announcements.length} announcements`,
     "/admin/news": `${newsItems.length} stories`,

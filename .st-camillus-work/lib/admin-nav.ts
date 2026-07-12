@@ -2,6 +2,10 @@ type AdminSectionHref =
   | "/admin"
   | "/admin/general"
   | "/admin/mass"
+  | "/admin/attendance"
+  | "/admin/confession"
+  | "/admin/missal"
+  | "/admin/hymns"
   | "/admin/announcements"
   | "/admin/news"
   | "/admin/documents"
@@ -50,6 +54,26 @@ export const adminSectionGroups: readonly AdminSectionGroup[] = [
         href: "/admin/mass",
         label: "Mass Scheduling",
         meta: "Times and liturgy"
+      },
+      {
+        href: "/admin/attendance",
+        label: "Attendance",
+        meta: "QR check-ins"
+      },
+      {
+        href: "/admin/confession",
+        label: "Confession",
+        meta: "Schedules and slots"
+      },
+      {
+        href: "/admin/missal",
+        label: "Missal",
+        meta: "English, Igbo, Latin"
+      },
+      {
+        href: "/admin/hymns",
+        label: "Choir Hymns",
+        meta: "Lyrics for each Mass"
       },
       {
         href: "/admin/pastoral",

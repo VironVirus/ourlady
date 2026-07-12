@@ -84,9 +84,9 @@ export default async function HomePage() {
       photo: churchPhotos.altarInterior
     },
     {
-      href: "/prayers",
-      label: "Prayers",
-      meta: "Open prayer write-ups",
+      href: "/missal",
+      label: "Missal",
+      meta: "Follow Mass prayers",
       icon: CrossIcon,
       photo: churchPhotos.frontExterior
     }
@@ -181,8 +181,8 @@ export default async function HomePage() {
               </div>
 
               <div className="hero__rail-actions">
-                <Link href="/prayers" className="button button--secondary">
-                  Open Prayers
+                <Link href="/missal" className="button button--secondary">
+                  Open Missal
                 </Link>
                 <Link href="/news" className="text-link text-link--light">
                   See chaplaincy news
@@ -256,6 +256,9 @@ export default async function HomePage() {
                     </p>
                     <Link href="/daily-readings" className="text-link">
                       Open full readings
+                    </Link>
+                    <Link href="/missal" className="text-link">
+                      Open Mass companion
                     </Link>
                   </div>
                 ) : null}

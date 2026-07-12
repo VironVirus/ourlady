@@ -1,12 +1,25 @@
 import { notFound } from "next/navigation";
+import { AdminAttendanceManager } from "@/components/admin-attendance-manager";
+import { AdminConfessionManager } from "@/components/admin-confession-manager";
 import { AdminDocumentManager } from "@/components/admin-document-manager";
+import { AdminHymnManager } from "@/components/admin-hymn-manager";
+import { AdminMissalManager } from "@/components/admin-missal-manager";
 import { AdminNewsManager } from "@/components/admin-news-manager";
 import { AdminSectionEditor } from "@/components/admin-section-editor";
 import { AdminShell } from "@/components/admin-shell";
 import { requireAdmin } from "@/lib/auth";
+import {
+  readAttendanceRecords,
+  readAttendanceRequests,
+  readConfessionReservations,
+  readConfessionSchedules,
+  readHymnPlans,
+  readMissalEntries
+} from "@/lib/community-modules";
 import { readDocuments } from "@/lib/documents";
 import { getSiteContent } from "@/lib/content";
 import { readNewsPosts } from "@/lib/news";
+import { getSiteUrl } from "@/lib/site-url";
 import { isSupabaseConfigured } from "@/lib/supabase-admin";
 
 const sectionConfig = {
@@ -19,6 +32,22 @@ const sectionConfig = {
     title: "Mass Scheduling",
     description: "Manage weekly chaplaincy times, confessions, and liturgy schedule items.",
     editorSection: "mass"
+  },
+  attendance: {
+    title: "Attendance",
+    description: "Create a QR check-in for each Mass and track who attended."
+  },
+  confession: {
+    title: "Confession",
+    description: "Create confession schedules, time slots, and printable attendance lists."
+  },
+  missal: {
+    title: "Missal",
+    description: "Prepare Order of Mass and daily prayer content in English, Igbo, and Latin."
+  },
+  hymns: {
+    title: "Choir Hymns",
+    description: "Add hymn lyrics for each Mass so the congregation can follow along."
   },
   associations: {
     title: "Associations",
@@ -138,6 +167,75 @@ export default async function AdminSectionPage({
     );
   }
 
+  if (section === "attendance") {
+    const [requests, records] = await Promise.all([
+      readAttendanceRequests(),
+      readAttendanceRecords()
+    ]);
+
+    return (
+      <AdminShell
+        title={config.title}
+        description={config.description}
+        notice={notice}
+      >
+        <AdminAttendanceManager
+          initialRequests={requests}
+          initialRecords={records}
+          siteUrl={getSiteUrl()}
+        />
+      </AdminShell>
+    );
+  }
+
+  if (section === "confession") {
+    const [schedules, reservations] = await Promise.all([
+      readConfessionSchedules(),
+      readConfessionReservations()
+    ]);
+
+    return (
+      <AdminShell
+        title={config.title}
+        description={config.description}
+        notice={notice}
+      >
+        <AdminConfessionManager
+          initialSchedules={schedules}
+          initialReservations={reservations}
+        />
+      </AdminShell>
+    );
+  }
+
+  if (section === "missal") {
+    const entries = await readMissalEntries();
+
+    return (
+      <AdminShell
+        title={config.title}
+        description={config.description}
+        notice={notice}
+      >
+        <AdminMissalManager initialEntries={entries} />
+      </AdminShell>
+    );
+  }
+
+  if (section === "hymns") {
+    const hymnPlans = await readHymnPlans();
+
+    return (
+      <AdminShell
+        title={config.title}
+        description={config.description}
+        notice={notice}
+      >
+        <AdminHymnManager initialPlans={hymnPlans} />
+      </AdminShell>
+    );
+  }
+
   const content = await getSiteContent();
 
   return (
@@ -148,7 +246,19 @@ export default async function AdminSectionPage({
     >
       <AdminSectionEditor
         initialContent={content}
-        section={section as Exclude<keyof typeof sectionConfig, "documents">}
+        section={
+          section as
+            | "general"
+            | "mass"
+            | "associations"
+            | "announcements"
+            | "saints"
+            | "prayers"
+            | "reflections"
+            | "pastoral"
+            | "priests"
+            | "gallery"
+        }
         redirectTo={`/admin/${section}`}
         uploadsEnabled={uploadsEnabled}
       />

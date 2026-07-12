@@ -7,6 +7,7 @@ import { ThemeModeToggle } from "@/components/theme-mode-toggle";
 import { siteIdentity } from "@/lib/site-identity";
 import {
   BookIcon,
+  ClockIcon,
   ChevronDownIcon,
   CloseIcon,
   CrossIcon,
@@ -53,6 +54,8 @@ export function SiteHeader({ activeSaint }: SiteHeaderProps) {
       label: "Resources",
       items: [
         { href: "/daily-readings", label: "Daily Readings", icon: BookIcon },
+        { href: "/missal", label: "Missal", icon: CrossIcon },
+        { href: "/confession", label: "Confession", icon: ClockIcon },
         { href: "/announcements", label: "Announcements", icon: MegaphoneIcon },
         { href: "/prayers", label: "Prayers", icon: CrossIcon },
         { href: "/documents", label: "Bulletins", icon: DocumentIcon },

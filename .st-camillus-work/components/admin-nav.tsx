@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BookIcon,
   ClockIcon,
   CrossIcon,
   DocumentIcon,
@@ -18,6 +19,10 @@ const sectionIcons = {
   "/admin": CrossIcon,
   "/admin/general": CrossIcon,
   "/admin/mass": ClockIcon,
+  "/admin/attendance": UsersIcon,
+  "/admin/confession": ClockIcon,
+  "/admin/missal": BookIcon,
+  "/admin/hymns": SparkIcon,
   "/admin/associations": UsersIcon,
   "/admin/announcements": MegaphoneIcon,
   "/admin/news": SparkIcon,
