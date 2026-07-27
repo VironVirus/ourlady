@@ -1,11 +1,12 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { CACHE_TAGS } from "@/lib/cache";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
 import { deleteNewsPost } from "@/lib/news";
 
 export async function DELETE(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const authenticated = await isAdminAuthenticated();
@@ -15,18 +16,11 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  const body = (await request.json().catch(() => ({}))) as {
-    slug?: string;
-  };
 
   try {
     await deleteNewsPost(id);
-
-    ["/", "/news", "/admin", "/admin/news"].forEach((route) => revalidatePath(route));
-
-    if (body.slug) {
-      revalidatePath(`/news/${body.slug}`);
-    }
+    revalidateTag(CACHE_TAGS.news, "max");
+    revalidateTag(CACHE_TAGS.siteContent, "max");
 
     return NextResponse.json({ ok: true });
   } catch (error) {

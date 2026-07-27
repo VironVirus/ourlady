@@ -1,10 +1,11 @@
 import { randomUUID } from "crypto";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_cache } from "next/cache";
 import {
   readSiteContent,
   saveSiteContent,
   type NewsItem
 } from "@/lib/content";
+import { CACHE_TAGS, PUBLIC_PAGE_REVALIDATE_SECONDS } from "@/lib/cache";
 import {
   getSupabaseAdmin,
   newsPostsTable
@@ -132,8 +133,6 @@ function sortNewsPosts(items: NewsPost[]) {
 }
 
 export async function readNewsPosts() {
-  noStore();
-
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
@@ -162,14 +161,19 @@ export async function readNewsPosts() {
   );
 }
 
+const getCachedNewsPosts = unstable_cache(readNewsPosts, [CACHE_TAGS.news], {
+  tags: [CACHE_TAGS.news, CACHE_TAGS.siteContent],
+  revalidate: PUBLIC_PAGE_REVALIDATE_SECONDS
+});
+
 export async function getPublishedNewsPosts() {
-  const items = await readNewsPosts();
+  const items = await getCachedNewsPosts();
 
   return items.filter((item) => item.published);
 }
 
 export async function getNewsPostBySlug(slug: string) {
-  const posts = await readNewsPosts();
+  const posts = await getCachedNewsPosts();
 
   return posts.find((item) => item.slug === slug) ?? null;
 }

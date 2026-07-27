@@ -12,6 +12,14 @@ type PriestPageProps = {
   }>;
 };
 
+export async function generateStaticParams() {
+  const content = await getSiteContent();
+
+  return content.priests.map((priest, index) => ({
+    slug: getPriestSlug(priest, index)
+  }));
+}
+
 function getPriestParagraphs(bio: string[], motto: string) {
   const paragraphs = bio.filter(Boolean);
 

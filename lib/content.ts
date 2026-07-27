@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_cache } from "next/cache";
 import {
   getSupabaseAdmin,
   siteContentRowId,
@@ -13,6 +13,7 @@ import {
 import { collectNewsImages, getPrimaryNewsImage } from "@/lib/news-images";
 import { normalizeNewsCategory } from "@/lib/news-categories";
 import { slugify } from "@/lib/slug";
+import { CACHE_TAGS, PUBLIC_PAGE_REVALIDATE_SECONDS } from "@/lib/cache";
 import {
   getThemePresetPalette,
   isThemePresetKey,
@@ -706,10 +707,13 @@ export async function readSiteContent() {
   return sanitizeSiteContent(localSource);
 }
 
-export async function getSiteContent() {
-  noStore();
+const getCachedSiteContent = unstable_cache(readSiteContent, [CACHE_TAGS.siteContent], {
+  tags: [CACHE_TAGS.siteContent],
+  revalidate: PUBLIC_PAGE_REVALIDATE_SECONDS
+});
 
-  return readSiteContent();
+export async function getSiteContent() {
+  return getCachedSiteContent();
 }
 
 export async function saveSiteContent(content: SiteContent) {

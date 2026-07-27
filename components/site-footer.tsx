@@ -22,9 +22,9 @@ export function SiteFooter({ massSummary, town }: SiteFooterProps) {
         <div className="site-footer__block">
           <strong>Explore</strong>
           <p className="site-footer__links">
-            <Link href="/associations">CYON</Link>
+            <Link href="/associations" prefetch={false}>CYON</Link>
             <span aria-hidden="true">•</span>
-            <Link href="/contact">Contact</Link>
+            <Link href="/contact" prefetch={false}>Contact</Link>
           </p>
         </div>
 

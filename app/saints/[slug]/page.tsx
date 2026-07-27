@@ -21,6 +21,14 @@ type SaintPageProps = {
   }>;
 };
 
+export async function generateStaticParams() {
+  const content = await getSiteContent();
+
+  return getVisibleSaints(content).map((item) => ({
+    slug: item.slug
+  }));
+}
+
 function sentenceCase(value: string) {
   if (!value) {
     return "";

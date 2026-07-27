@@ -1,4 +1,3 @@
-import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { likeNewsPost } from "@/lib/news";
 
@@ -10,7 +9,6 @@ export async function POST(
 
   try {
     const likes = await likeNewsPost(slug);
-    ["/", "/news", `/news/${slug}`].forEach((route) => revalidatePath(route));
 
     return NextResponse.json({ likes });
   } catch {

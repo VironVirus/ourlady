@@ -114,7 +114,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
     return (
       <header className="site-header site-header--minimal">
         <div className="container site-header__inner">
-          <Link href="/" className="brand-mark" onClick={closeMenus}>
+          <Link href="/" prefetch={false} className="brand-mark" onClick={closeMenus}>
             <span className="brand-mark__seal">OL</span>
             <span className="brand-mark__text">
               <strong>Our Lady of Lourdes</strong>
@@ -131,7 +131,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
   return (
     <header className="site-header" ref={headerRef}>
       <div className="container site-header__inner">
-        <Link href="/" className="brand-mark" onClick={closeMenus}>
+        <Link href="/" prefetch={false} className="brand-mark" onClick={closeMenus}>
           <span className="brand-mark__seal">OL</span>
           <span className="brand-mark__text">
             <strong>Our Lady of Lourdes</strong>
@@ -142,7 +142,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
         <div className="site-header__controls">
           {showActiveSaint ? (
             activeSaint.href ? (
-              <Link href={activeSaint.href} className="site-saint-pill">
+              <Link href={activeSaint.href} prefetch={false} className="site-saint-pill">
                 <span>Saint Today</span>
                 <strong>{activeSaint.name}</strong>
               </Link>
@@ -163,6 +163,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={false}
                     className={pathname === item.href ? "is-active" : undefined}
                   >
                     <Icon className="icon icon--tiny" />
@@ -177,6 +178,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                 <Link
                   key={group.label}
                   href={group.href}
+                  prefetch={false}
                   className={pathname === group.href || pathname.startsWith(`${group.href}/`) ? "is-active" : undefined}
                   onClick={() => setOpenDesktopGroup(null)}
                 >
@@ -214,6 +216,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                         <Link
                           key={item.href}
                           href={item.href}
+                          prefetch={false}
                           className={isActive ? "is-active" : undefined}
                           onClick={() => setOpenDesktopGroup(null)}
                         >
@@ -252,6 +255,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                 activeSaint.href ? (
                   <Link
                     href={activeSaint.href}
+                    prefetch={false}
                     className="site-mobile-menu__saint"
                     onClick={closeMenus}
                   >
@@ -274,6 +278,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                     <Link
                       key={item.href}
                       href={item.href}
+                      prefetch={false}
                       className={pathname === item.href ? "is-active" : undefined}
                       onClick={closeMenus}
                     >
@@ -319,6 +324,7 @@ export function SiteHeader({ activeSaint, associations }: SiteHeaderProps) {
                               <Link
                                 key={item.href}
                                 href={item.href}
+                                prefetch={false}
                                 className={isActive ? "is-active" : undefined}
                                 onClick={closeMenus}
                               >

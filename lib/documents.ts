@@ -1,10 +1,11 @@
 import { randomUUID } from "crypto";
-import { unstable_noStore as noStore } from "next/cache";
+import { unstable_cache } from "next/cache";
 import {
   readSiteContent,
   saveSiteContent,
   type DocumentItem
 } from "@/lib/content";
+import { CACHE_TAGS, PUBLIC_PAGE_REVALIDATE_SECONDS } from "@/lib/cache";
 import {
   documentsTable,
   getSupabaseAdmin
@@ -105,8 +106,6 @@ function sortDocuments(items: ParishDocument[]) {
 }
 
 export async function readDocuments() {
-  noStore();
-
   const supabase = getSupabaseAdmin();
 
   if (supabase) {
@@ -135,8 +134,13 @@ export async function readDocuments() {
   );
 }
 
+const getCachedDocuments = unstable_cache(readDocuments, [CACHE_TAGS.documents], {
+  tags: [CACHE_TAGS.documents, CACHE_TAGS.siteContent],
+  revalidate: PUBLIC_PAGE_REVALIDATE_SECONDS
+});
+
 export async function getPublishedDocuments() {
-  const items = await readDocuments();
+  const items = await getCachedDocuments();
 
   return items.filter((item) => item.published && item.fileUrl);
 }

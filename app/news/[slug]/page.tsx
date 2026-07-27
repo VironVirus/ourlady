@@ -15,6 +15,14 @@ type NewsStoryPageProps = {
   }>;
 };
 
+export async function generateStaticParams() {
+  const items = await getPublishedNewsPosts();
+
+  return items.map((item) => ({
+    slug: item.slug
+  }));
+}
+
 function toParagraphs(value: string) {
   return value
     .split(/\n{2,}/)

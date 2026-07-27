@@ -19,6 +19,8 @@ import {
 } from "@/lib/site-runtime";
 import { getThemePresetVariableSet } from "@/lib/theme-presets";
 
+export const revalidate = 900;
+
 const siteUrl = getSiteUrl();
 
 export const metadata: Metadata = {

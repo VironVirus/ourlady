@@ -1,13 +1,14 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import {
   clearAdminSession,
   isAdminAuthenticated,
   setAdminSession,
   verifyAdminCredentials
 } from "@/lib/auth";
+import { CACHE_TAGS } from "@/lib/cache";
 import { saveSiteContent, type SiteContent } from "@/lib/content";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
 
@@ -47,39 +48,9 @@ export async function saveSiteContentAction(formData: FormData) {
     const parsed = JSON.parse(payload) as SiteContent;
 
     await saveSiteContent(parsed);
-
-    [
-      "/",
-      "/about",
-      "/daily-readings",
-      "/mass-schedule",
-      "/associations",
-      "/saints",
-      "/priest",
-      "/contact",
-      "/gallery",
-      "/news",
-      "/documents",
-      "/announcements",
-      "/prayers",
-      "/reflections",
-      "/pastoral",
-      "/blog",
-      "/dashboard",
-      "/admin",
-      "/admin/general",
-      "/admin/mass",
-      "/admin/associations",
-      "/admin/announcements",
-      "/admin/news",
-      "/admin/documents",
-      "/admin/saints",
-      "/admin/prayers",
-      "/admin/reflections",
-      "/admin/pastoral",
-      "/admin/priests",
-      "/admin/gallery"
-    ].forEach((route) => revalidatePath(route));
+    revalidateTag(CACHE_TAGS.siteContent, "max");
+    revalidateTag(CACHE_TAGS.news, "max");
+    revalidateTag(CACHE_TAGS.documents, "max");
 
     redirect(`${redirectTo}?saved=1`);
   } catch (error) {

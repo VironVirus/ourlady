@@ -1,6 +1,7 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { CACHE_TAGS } from "@/lib/cache";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
 import { deleteDocumentItem } from "@/lib/documents";
 
@@ -18,8 +19,8 @@ export async function DELETE(
 
   try {
     await deleteDocumentItem(id);
-
-    ["/documents", "/admin", "/admin/documents"].forEach((route) => revalidatePath(route));
+    revalidateTag(CACHE_TAGS.documents, "max");
+    revalidateTag(CACHE_TAGS.siteContent, "max");
 
     return NextResponse.json({ ok: true });
   } catch (error) {

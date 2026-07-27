@@ -35,6 +35,7 @@ export function SiteBottomNav() {
           <Link
             key={item.href}
             href={item.href}
+            prefetch={false}
             className={isActive ? "is-active" : undefined}
           >
             <Icon className="icon icon--tiny" />

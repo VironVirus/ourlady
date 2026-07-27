@@ -1,6 +1,7 @@
-import { revalidatePath } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/auth";
+import { CACHE_TAGS } from "@/lib/cache";
 import { remoteStorageRequiredMessage } from "@/lib/deployment";
 import { collectNewsImages } from "@/lib/news-images";
 import { normalizeNewsCategory } from "@/lib/news-categories";
@@ -39,19 +40,8 @@ export async function POST(request: Request) {
       published: body.published !== false,
       likes: typeof body.likes === "number" ? body.likes : 0
     });
-
-    [
-      "/",
-      "/news",
-      `/news/${saved.slug}`,
-      "/admin",
-      "/admin/news"
-    ].forEach((route) => revalidatePath(route));
-
-    const previousSlug = asString(body.previousSlug);
-    if (previousSlug && previousSlug !== saved.slug) {
-      revalidatePath(`/news/${previousSlug}`);
-    }
+    revalidateTag(CACHE_TAGS.news, "max");
+    revalidateTag(CACHE_TAGS.siteContent, "max");
 
     return NextResponse.json({
       item: saved,
